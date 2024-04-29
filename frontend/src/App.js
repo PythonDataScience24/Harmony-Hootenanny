@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import AudioPlayer from 'react-h5-audio-player';
-import 'react-h5-audio-player/lib/styles.css';
-
+import React, { useState, useEffect } from "react";
+import AudioPlayer from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
+import AutoCompleteComponent from "./components/AutoCompleteComponent";
 
 function App() {
-
-
   const [message, setMessage] = useState();
+  const [filename, setFilename] = useState(""); // Empty string throws 404 error on first load
+  const backendUrl = "http://localhost:5000";
 
   useEffect(() => {
     fetch('http://localhost:5000/api/greet')
@@ -19,17 +19,21 @@ function App() {
   return (
     <>
       <div>{message}</div>
-      <div style={{width:"500px"}}>
-
-      <AudioPlayer
-        autoPlay
-        src="Men At Work - Down Under (Official HD Video).mp3"
-        showSkipControls={true}
-        onPlay={e => console.log("onPlay")}
+      <AutoCompleteComponent
+        onSongSelect={(selectedTitle) =>
+          setFilename(encodeURIComponent(selectedTitle))
+        }
+      />
+      <div style={{ width: "500px" }}>
+        <AudioPlayer
+          autoPlay
+          src={`${backendUrl}/stream/mp3/${filename}`}
+          showSkipControls={true}
+          onPlay={(e) => console.log("onPlay")}
         ></AudioPlayer>
-        </div>
+      </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
