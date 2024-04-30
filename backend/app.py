@@ -25,7 +25,7 @@ def stream_mp3(filename):
 @app.route('/api/search', methods=['GET'])
 def search_songs():
     query = request.args.get('q', '')  # Retrieve search term from the query string; default to empty string if not provided
-    mp3_directory = './backend/songs/'
+    mp3_directory = './songs/'
     suggestions = []
      # Iterate over all files in the directory and check if their name contains the search term
     for filename in os.listdir(mp3_directory):

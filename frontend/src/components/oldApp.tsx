@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
-import AutoCompleteComponent from "./components/AutoCompleteComponent";
+import AutoCompleteComponent from "./AutoCompleteComponent";
 
-function App() {
+export default function App() {
   const [message, setMessage] = useState();
   const [filename, setFilename] = useState(""); // Empty string throws 404 error on first load
   const backendUrl = "http://localhost:5000";
@@ -15,12 +15,11 @@ function App() {
       .catch(error => console.error('Error:', error));
   }, []);
 
-  const songs = ["Men At Work - Down Under (Official HD Video).mp3", "Men At Work - Down Under (Official HD Video).mp3"]
   return (
     <>
       <div>{message}</div>
       <AutoCompleteComponent
-        onSongSelect={(selectedTitle) =>
+        onSongSelect={(selectedTitle: string) =>
           setFilename(encodeURIComponent(selectedTitle))
         }
       />
@@ -36,4 +35,3 @@ function App() {
   );
 }
 
-export default App;
