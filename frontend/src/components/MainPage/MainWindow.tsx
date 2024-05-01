@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import AutoCompleteComponent from '../AutoCompleteComponent';
+import PeopleInChannel from './PeopleInChannel';
 
 function MainWindow() {
     const [message, setMessage] = useState();
@@ -36,16 +37,8 @@ function MainWindow() {
                     
                 }}
             >
-            <Box
-                sx={{
-                    width: "100%",
-                    backgroundColor: "Ivory",
-                    marginBottom:"1em", // Abstand zum nächsten Element. em = Schriftgröße des aktuellen Elementes
-                    padding: "1em", // Innenabstand
-                    
-                }}
-            > People in Channel Component 
-            </Box>
+
+                <PeopleInChannel/>  
             <div>
                 <AutoCompleteComponent
                     onSongSelect={(selectedTitle: string) =>
