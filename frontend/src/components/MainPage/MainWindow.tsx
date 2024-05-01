@@ -15,17 +15,37 @@ function MainWindow() {
             .then(data => setMessage(data.message))
             .catch(error => console.error('Error:', error));
     }, []);
-
+    
     return (
         <Box
             sx={{
                 display: 'flex',
                 flexDirection: "column",
-                justifyContent: "space-between",
-                height: "100%"
+                justifyContent: "space-between", 
+                alignItems: "strech", // Center horizontally
+                height: "100%",
+                width: "100%",
+                
             }}
         >
-            <div>People in Channel Component</div>
+            <Box
+                sx={{
+                   display: 'flex',
+                   flexDirection: "column",
+                   alignItems: "center",
+                    
+                }}
+            >
+            <Box
+                sx={{
+                    width: "100%",
+                    backgroundColor: "Ivory",
+                    marginBottom:"1em", // Abstand zum nächsten Element. em = Schriftgröße des aktuellen Elementes
+                    padding: "1em", // Innenabstand
+                    
+                }}
+            > People in Channel Component 
+            </Box>
             <div>
                 <AutoCompleteComponent
                     onSongSelect={(selectedTitle: string) =>
@@ -33,6 +53,13 @@ function MainWindow() {
                     }
                 />
             </div>
+            </Box>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: "center",
+                }}
+            >
             <div style={{ width: "500px" }}>
                 <AudioPlayer
                     autoPlay
@@ -41,6 +68,7 @@ function MainWindow() {
                     onPlay={(e) => console.log("onPlay")}
                 ></AudioPlayer>
             </div>
+        </Box>
         </Box>
     )
 }

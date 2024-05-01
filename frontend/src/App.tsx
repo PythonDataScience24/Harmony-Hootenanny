@@ -16,7 +16,7 @@ export default function App() {
   return (
     <>
       <h1>Harmony Hootenany</h1>
-      <Box sx={{ display: "flex", height:"80vh"}}>          
+      <Box sx={{ display: "flex", height:"80vh", width:'100vw'}}>          
         <RouterProvider router={router} />
       </Box>
     </>

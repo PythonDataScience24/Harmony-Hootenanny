@@ -3,7 +3,7 @@ import React from 'react'
 
 function Rooms() {
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', height:'100%', padding:'1em', backgroundColor: 'lightgrey' }}>
       <Stack spacing={2}>
         <div>Room1</div>
         <div>Room2</div>
