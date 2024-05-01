@@ -1,15 +1,49 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, g
 from flask_socketio import SocketIO,emit
 from flask_cors import CORS
 import os
+import sqlite3
+from sqlite3 import Error
 
 app = Flask(__name__)
-
 
 CORS(app,resources={r"/*":{"origins":"*"}})
 socketio = SocketIO(app,cors_allowed_origins="*")
 
 
+# Connect to database
+def get_db():
+    db = getattr(g, '_database', None)
+    if db is None:
+        try:
+            db = g._database = sqlite3.connect("database.db")
+            print("Successfully connected to database")
+            return db
+        except Error as e:
+            print(f"Failed to connect to the database: {e}")
+            return None
+        
+# Initialize db using the SQL schema from "schema.sql" file
+def init_db():
+    with app.app_context():
+        db = get_db()
+        with app.open_resource('schema.sql', mode='r') as f:
+            # Execute schema to create the specified tables
+            db.cursor().executescript(f.read())
+        db.commit()
+        db.close() # Ensures the database connection is closed after the schema is applied
+
+# Open new db connection before processing a request
+@app.before_request
+def before_request():
+    g.db = get_db()
+
+# Close db connection after request has been served
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, 'db', None)
+    if db is not None:
+        db.close()
 
 @app.route('/', methods=['GET'])
 def home():
@@ -67,4 +101,5 @@ def disconnected():
 
 
 if __name__ == '__main__':
+    init_db()
     app.run(debug=True)
