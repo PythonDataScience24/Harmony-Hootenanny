@@ -5,10 +5,11 @@ function PeopleInChannel() {
     return (
         <Box
             sx={{
-                backgroundColor: "Ivory",
+                backgroundColor: "#DEEAEF",
                 marginLeft: "auto", // Abstand zum nächsten Element. em = Schriftgröße des aktuellen Elementes
                 marginRight: "auto", // Abstand zum nächsten Element. em = Schriftgröße des aktuellen Elementes
                 padding: "1em", // Innenabstand
+                width: "100%",
 
             }}>
             People in Channel Component

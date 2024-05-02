@@ -16,36 +16,37 @@ function MainWindow() {
             .then(data => setMessage(data.message))
             .catch(error => console.error('Error:', error));
     }, []);
-    
+
     return (
         <Box
             sx={{
                 display: 'flex',
                 flexDirection: "column",
-                justifyContent: "space-between", 
-                alignItems: "strech", // Center horizontally
+                justifyContent: "space-between",
+                alignItems: "strech", 
                 height: "100%",
                 width: "100%",
-                
+                backgroundColor: "#F8F9FA",
+
             }}
         >
             <Box
                 sx={{
-                   display: 'flex',
-                   flexDirection: "column",
-                   alignItems: "center",
-                    
+                    display: 'flex',
+                    flexDirection: "column",
+                    alignItems: "center",
+
                 }}
             >
 
-                <PeopleInChannel/>  
-            <div>
-                <AutoCompleteComponent
-                    onSongSelect={(selectedTitle: string) =>
-                        setFilename(encodeURIComponent(selectedTitle))
-                    }
-                />
-            </div>
+                <PeopleInChannel />
+                <div>
+                    <AutoCompleteComponent
+                        onSongSelect={(selectedTitle: string) =>
+                            setFilename(encodeURIComponent(selectedTitle))
+                        }
+                    />
+                </div>
             </Box>
             <Box
                 sx={{
@@ -53,15 +54,15 @@ function MainWindow() {
                     justifyContent: "center",
                 }}
             >
-            <div style={{ width: "500px" }}>
-                <AudioPlayer
-                    autoPlay
-                    src={`${backendUrl}/stream/mp3/${filename}`}
-                    showSkipControls={true}
-                    onPlay={(e) => console.log("onPlay")}
-                ></AudioPlayer>
-            </div>
-        </Box>
+                <div style={{ maxWidth: "500px", width:"100%" }}>
+                    <AudioPlayer
+                        autoPlay
+                        src={`${backendUrl}/stream/mp3/${filename}`}
+                        showSkipControls={true}
+                        onPlay={(e) => console.log("onPlay")}
+                    ></AudioPlayer>
+                </div>
+            </Box>
         </Box>
     )
 }

@@ -17,7 +17,7 @@ function MainPage() {
         <Box sx={{ flexGrow: 1 }}>
           <Rooms></Rooms>
         </Box>
-        <Box sx={{ flexGrow: 7, height: "100%", width:'70%'}}>
+        <Box sx={{ flexGrow: 7, height: "100%"}}>
           <MainWindow></MainWindow>
         </Box>
         <Box sx={{ flexGrow: 2 }}>
