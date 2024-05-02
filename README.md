@@ -5,35 +5,51 @@ What makes our project exceptional is the easy accessibility to listen to the sa
 
 ## How to get started:
 
-for the backend flask, flask_socketio and flask_cors have to be installed. Get them by using pip install [module]
+### Prerequisites
+
+Ensure you have Python, pip, Node.js, and npm installed on your machine. These are essential to run the backend and frontend of our project.
+
+### Backend Setup
+
+After cloning the repository change into the backend folder of this project:
 
 ```
 cd backend
 ```
 
-followed by starting the backend:
+For our application we need the following packages to be installed: `flask`, `flask_socketio` and `flask_cors`. Get them either by using pip install [module] or install them using the `requirements.txt` file:
 
 ```
-python .\app.py
+pip install -r requirements.txt
 ```
 
-then in another terminal cd into the frontend:
+After the packages are installed you can start the backend server using the following command:
+
+```
+python app.py
+```
+
+### Frontend Setup
+
+In another terminal change into the frontend folder:
 
 ```
 cd frontend
 ```
 
-install node modules:
+Install the required node modules:
 
 ```
-npm i
+npm install
 ```
 
-followed by staring the frontend server:
+After the packages are installed you can start the frontend server using the following command:
 
 ```
 npm start
 ```
+
+Now the frontend will run at `http://localhost:3000/` in your browser.
 
 # Roadmap
 
