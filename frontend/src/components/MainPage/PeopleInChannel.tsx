@@ -1,20 +1,34 @@
-import { Box } from '@mui/material'
-import React from 'react'
+import { Box, Stack, useTheme, Paper } from '@mui/material';
 
-function PeopleInChannel() {
+
+
+export function PeopleInChannel({ users }: { users: string[]; }) {
+
+    const theme = useTheme();
     return (
-        <Box
+        <Paper
+            elevation={1}
             sx={{
-                backgroundColor: "#DEEAEF",
-                marginLeft: "auto", // Abstand zum nächsten Element. em = Schriftgröße des aktuellen Elementes
-                marginRight: "auto", // Abstand zum nächsten Element. em = Schriftgröße des aktuellen Elementes
-                padding: "1em", // Innenabstand
-                width: "100%",
-
+                margin: "10px auto 10px auto",
+                padding: "15px", // Innenabstand
+                width: "95%",
             }}>
-            People in Channel Component
-        </Box>
-    )
-}
+            <Stack direction={"row"} gap={2}>
+                {users.map((name) => {
+                    return (
+                        <Paper key={name} elevation={5}>
+                            <Box key={name} p={1} display={"flex"} gap={1} justifyContent={"center"} >
+                                <svg height="24" width="24">
+                                    <circle r="10" cx="12" cy="12" fill="lightgray" />
+                                </svg>
+                                <div>
+                                    {name}
+                                </div>
+                            </Box>
+                        </Paper>)
+                })}
 
-export default PeopleInChannel
+            </Stack>
+        </Paper>
+    );
+}

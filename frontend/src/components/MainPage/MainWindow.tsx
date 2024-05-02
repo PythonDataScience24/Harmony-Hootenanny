@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import AutoCompleteComponent from '../AutoCompleteComponent';
-import PeopleInChannel from './PeopleInChannel';
+import { PeopleInChannel } from './PeopleInChannel';
 
 function MainWindow() {
     const [message, setMessage] = useState();
@@ -16,17 +16,17 @@ function MainWindow() {
             .then(data => setMessage(data.message))
             .catch(error => console.error('Error:', error));
     }, []);
-
+    const users = ["Aline", "Jerry", "Nils", "Janina"]
     return (
         <Box
             sx={{
                 display: 'flex',
                 flexDirection: "column",
                 justifyContent: "space-between",
-                alignItems: "strech", 
+                alignItems: "strech",
                 height: "100%",
                 width: "100%",
-                backgroundColor: "#F8F9FA",
+                //backgroundColor: "#F8F9FA",
 
             }}
         >
@@ -35,11 +35,9 @@ function MainWindow() {
                     display: 'flex',
                     flexDirection: "column",
                     alignItems: "center",
-
                 }}
             >
-
-                <PeopleInChannel />
+                <PeopleInChannel users={users} />
                 <div>
                     <AutoCompleteComponent
                         onSongSelect={(selectedTitle: string) =>
@@ -54,13 +52,13 @@ function MainWindow() {
                     justifyContent: "center",
                 }}
             >
-                <div style={{ maxWidth: "500px", width:"100%" }}>
+                <div style={{ maxWidth: '500px', width: '100%' }}>
                     <AudioPlayer
                         autoPlay
                         src={`${backendUrl}/stream/mp3/${filename}`}
                         showSkipControls={true}
-                        onPlay={(e) => console.log("onPlay")}
-                    ></AudioPlayer>
+                        onPlay={(e) => console.log('onPlay')}
+                    />
                 </div>
             </Box>
         </Box>
