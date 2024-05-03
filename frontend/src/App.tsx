@@ -32,11 +32,11 @@ export default function App() {
     <StrictMode>
       <ThemeProvider theme={theme}>
         <CssBaseline enableColorScheme />
-        <Box height={"10vh"}>
+        <Box height={"10vh"} marginLeft="20px"alignContent={"center"}>
         <h1>Harmony Hootenany</h1>
         </Box>        
         <Divider/>
-        <Box height={"85vh"} sx={{ display: "flex", width: '100vw' }}>
+        <Box height={"87vh"} sx={{ display: "flex", width: '100vw' }}>
           <RouterProvider router={router} />
         </Box>
       </ThemeProvider>
