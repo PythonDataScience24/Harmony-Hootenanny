@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 import MainPage from "./components/MainPage/MainPage";
 import SecondPage from "./components/SecondPage";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
@@ -32,8 +32,11 @@ export default function App() {
     <StrictMode>
       <ThemeProvider theme={theme}>
         <CssBaseline enableColorScheme />
+        <Box height={"10vh"}>
         <h1>Harmony Hootenany</h1>
-        <Box sx={{ display: "flex", height: "80vh", width: '100vw' }}>
+        </Box>        
+        <Divider/>
+        <Box height={"85vh"} sx={{ display: "flex", width: '100vw' }}>
           <RouterProvider router={router} />
         </Box>
       </ThemeProvider>

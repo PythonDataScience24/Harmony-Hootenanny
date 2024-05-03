@@ -26,8 +26,6 @@ function MainWindow() {
                 alignItems: "strech",
                 height: "100%",
                 width: "100%",
-                //backgroundColor: "#F8F9FA",
-
             }}
         >
             <Box
@@ -52,7 +50,7 @@ function MainWindow() {
                     justifyContent: "center",
                 }}
             >
-                <div style={{ maxWidth: '500px', width: '100%' }}>
+                <div style={{ maxWidth: '500px', width: '100%', marginBottom: "20px" }}>
                     <AudioPlayer
                         autoPlay
                         src={`${backendUrl}/stream/mp3/${filename}`}

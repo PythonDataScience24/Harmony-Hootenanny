@@ -34,7 +34,7 @@ function SongQueue() {
     <>
       <h2 style={{ margin: "20px" }}>Song Queue:</h2>
       <Box sx={{
-        width: '100%', height: '100%', overflow: "auto",
+        width: '100%', height: '85%', overflow: "auto",
         //backgroundColor:'#f0f2f5', 
         padding: '1em', boxSizing: 'border-box'
       }}>

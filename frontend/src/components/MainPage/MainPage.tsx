@@ -18,7 +18,7 @@ function MainPage() {
           <Rooms></Rooms>
         </Box>
 
-        <Divider orientation="vertical" />
+        <Divider orientation="vertical"/>
         <Box sx={{ flexGrow: 7, height: "100%" }}>
           <MainWindow></MainWindow>
         </Box>
