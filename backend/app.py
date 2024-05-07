@@ -4,6 +4,7 @@ from flask_cors import CORS
 import os
 import sqlite3
 from sqlite3 import Error
+from pytube import YouTube
 
 app = Flask(__name__)
 
@@ -99,6 +100,21 @@ def disconnected():
     print("user disconnected")
     emit("disconnect",f"user {request.sid} disconnected",broadcast=True)
 
+@app.route('/download',)
+def download_youtube_video():
+    youtube_link = request.json.get('youtube_link')
+    if not youtube_link:
+        return 'No YouTube link provided', 400
+    try:
+        yt = YouTube(youtube_link)
+        stream = yt.streams.filter(only_audio=True, file_extension='mp3').first()
+        if stream:
+            stream.download(output_path='./songs/')
+            return 'Video downloaded successfully', 200
+        else:
+            return 'No MP3 stream available for this video', 400
+    except Exception as e:
+        return str(e), 500
 
 if __name__ == '__main__':
     init_db()
