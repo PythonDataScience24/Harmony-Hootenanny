@@ -1,7 +1,7 @@
 // WebSocketTest.js
 
 import React, { useState, useEffect } from "react";
-import socket from "./socket"; // Import the socket object
+import socket from "../../socket";
 
 function WebSocketTest() {
     const [messages, setMessages] = useState([]);
