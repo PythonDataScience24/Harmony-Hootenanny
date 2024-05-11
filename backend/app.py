@@ -11,7 +11,6 @@ app = Flask(__name__)
 CORS(app,resources={r"/*":{"origins":"*"}})
 socketio = SocketIO(app,cors_allowed_origins="*")
 
-
 # Connect to database
 def get_db():
     db = getattr(g, '_database', None)
@@ -80,6 +79,8 @@ def http_call():
     """return JSON with string data as the value"""
     data = {'data':'This text was fetched using an HTTP call to server on render'}
     return jsonify(data)
+
+""" Websocket code """
 
 @socketio.on("connect")
 def connected():

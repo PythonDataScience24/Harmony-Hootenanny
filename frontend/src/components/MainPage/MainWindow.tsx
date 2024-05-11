@@ -4,18 +4,24 @@ import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import AutoCompleteComponent from '../AutoCompleteComponent';
 import { PeopleInChannel } from './PeopleInChannel';
+import WebSocketCall from '../WebSocketCall';
+import WebSocketTest from './WebSocketTest';
 
 function MainWindow() {
     const [message, setMessage] = useState();
     const [filename, setFilename] = useState(""); // Empty string throws 404 error on first load
     const backendUrl = "http://localhost:5000";
-
-    useEffect(() => {
-        fetch('http://localhost:5000/api/greet')
-            .then(response => response.json())
-            .then(data => setMessage(data.message))
-            .catch(error => console.error('Error:', error));
+ /*
+ *
+ useEffect(() => {
+     fetch('http://localhost:5000/api/greet')
+     .then(response => response.json())
+     .then(data => setMessage(data.message))
+     .catch(error => console.error('Error:', error));
     }, []);
+    */
+   
+ // const socket = new WebSocket("ws://localhost:5000")
     const users = ["Aline", "Jerry", "Nils", "Janina"]
     return (
         <Box
@@ -42,6 +48,10 @@ function MainWindow() {
                             setFilename(encodeURIComponent(selectedTitle))
                         }
                     />
+                </div>
+                
+                <div>
+                    <WebSocketTest></WebSocketTest>
                 </div>
             </Box>
             <Box
