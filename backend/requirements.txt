@@ -16,4 +16,5 @@ simple-websocket==1.0.0
 Werkzeug==3.0.2
 wsproto==1.2.0
 six==1.16.0
+pytube==15.0.0
 
