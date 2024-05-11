@@ -5,3 +5,8 @@ CREATE TABLE IF NOT EXISTS rooms (
   session_end_time DATETIME,
   session_duration INTEGER
 );
+CREATE TABLE IF NOT EXISTS users (
+  user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username Text,
+  password_hash Text
+);

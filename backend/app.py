@@ -4,6 +4,7 @@ from flask_cors import CORS
 import os
 import sqlite3
 from sqlite3 import Error
+from werkzeug.security import generate_password_hash, check_password_hash
 from pytube import YouTube
 
 app = Flask(__name__)
@@ -14,15 +15,16 @@ socketio = SocketIO(app,cors_allowed_origins="*")
 
 # Connect to database
 def get_db():
-    db = getattr(g, '_database', None)
-    if db is None:
-        try:
+    try:
+        db = getattr(g, '_database', None)
+        if db is None:
             db = g._database = sqlite3.connect("database.db")
+            db.row_factory = sqlite3.Row
             print("Successfully connected to database")
-            return db
-        except Error as e:
-            print(f"Failed to connect to the database: {e}")
-            return None
+        return db
+    except sqlite3.Error as e:
+        print("SQLite error:", e)
+        return None
         
 # Initialize db using the SQL schema from "schema.sql" file
 def init_db():
@@ -34,11 +36,6 @@ def init_db():
         db.commit()
         db.close() # Ensures the database connection is closed after the schema is applied
 
-# Open new db connection before processing a request
-@app.before_request
-def before_request():
-    g.db = get_db()
-
 # Close db connection after request has been served
 @app.teardown_appcontext
 def close_connection(exception):
@@ -49,6 +46,107 @@ def close_connection(exception):
 @app.route('/', methods=['GET'])
 def home():
     return "Hello, Flask!"
+
+# Endpoint for signup
+@app.route('/signup', methods=['POST'])
+def signup():
+    data = request.json
+    username = data.get('username')
+    password = data.get('password')
+    confirmPassword = data.get('confirmPassword')
+
+    # Basic validation
+    if not username or not password:
+        return jsonify({"error": "Missing fields"}), 400
+    
+    if password != confirmPassword:
+        return jsonify({"error": "Passwords do not match"}), 400
+
+    try:
+        # Check if username already exists
+        cursor = get_db().cursor()
+        cursor.execute("SELECT * FROM users WHERE username=?", (username,))
+        existing_user = cursor.fetchone()
+        if existing_user:
+            return jsonify({"error": "Username already exists"}), 409
+
+        # Hash password
+        password_hash = generate_password_hash(password)
+
+        # Save the user in the database
+        db = get_db()
+        cursor.execute("INSERT INTO users (username, password_hash) VALUES (?, ?)", (username, password_hash))
+        db.commit()
+
+        return jsonify({"message": "User created successfully", "username": username}), 201
+    except sqlite3.Error as e:
+        # Handle database errors
+        return jsonify({"error": "Database error: {}".format(str(e))}), 500
+    finally:
+        # Close the cursor after execution
+        cursor.close()
+
+
+# Endpioint for login and signup
+@app.route('/login', methods=['POST'])
+def login():
+    # Receive user data
+    data = request.json
+    username = data.get('username')
+    password = data.get('password')
+
+    # Basic validation
+    if not username or not password:
+        return jsonify({"error": "Missing username or password"}), 400
+    
+    try:
+        # Get database connection
+        db = get_db()
+        cursor = db.cursor()
+
+        # Check if the username exists in the database
+        cursor.execute("SELECT * FROM users WHERE username=?", (username,))
+        user = cursor.fetchone()
+
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        # Verify password
+        if check_password_hash(user['password_hash'], password):
+            print(username,"successfully logged in") # only for testing
+            return jsonify({"message": "Login successful", "username": username}), 200
+        else:
+            print("Login failed due to invalid password") # only for testing
+            return jsonify({"error": "Invalid password"}), 401
+    except sqlite3.Error as e:
+        # Handle database errors
+        return jsonify({"error": "Database error: {}".format(str(e))}), 500
+    finally:
+        # Close the cursor after execution
+        cursor.close()
+
+# Only for Testing: Endpoint to list all users in db
+@app.route('/users', methods=['GET'])
+def list_users():
+    try:
+        # Get database connection
+        db = get_db()
+        cursor = db.cursor()
+
+        # Execute query to fetch all users
+        cursor.execute("SELECT username FROM users")
+        users = cursor.fetchall()
+
+        # Extract usernames from the result
+        user_list = [user['username'] for user in users]
+
+        return jsonify({"users": user_list}), 200
+    except sqlite3.Error as e:
+        # Handle database errors
+        return jsonify({"error": "Database error: {}".format(str(e))}), 500
+    finally:
+        # Close the cursor after execution
+        cursor.close()
 
 # Endpoint to stream an mp3 file from the server
 @app.route('/stream/mp3/<filename>')
