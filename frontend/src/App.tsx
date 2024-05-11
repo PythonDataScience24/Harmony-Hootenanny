@@ -32,11 +32,13 @@ export default function App() {
     <StrictMode>
       <ThemeProvider theme={theme}>
         <CssBaseline enableColorScheme />
-        <Box height={"10vh"} marginLeft="20px"alignContent={"center"}>
-        <h1>Harmony Hootenany</h1>
-        </Box>        
-        <Divider/>
+        <Box height={"10vh"} marginLeft="20px" alignContent={"center"}>
+          <h1>Harmony Hootenany</h1>
+        </Box>
+        <Divider />
         <Box height={"87vh"} sx={{ display: "flex", width: '100vw' }}>
+          {/*for websockets*/}
+          <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossOrigin="anonymous"></script>
           <RouterProvider router={router} />
         </Box>
       </ThemeProvider>

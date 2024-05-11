@@ -1,19 +1,7 @@
 import { Box, Paper, Stack, styled } from '@mui/material'
 import React from 'react'
 
-function SongQueue() {/*
-  // Create WebSocket connection.
-  const socket = new WebSocket("ws://localhost:5000");
-
-  // Connection opened
-  socket.addEventListener("open", (event) => {
-    socket.send("Hello Server!");
-  });
-
-  // Listen for messages
-  socket.addEventListener("message", (event) => {
-    console.log("Message from server ", event.data);
-  });*/
+function SongQueue() {
   const songList = [
     {
       "title": "Shape of You",

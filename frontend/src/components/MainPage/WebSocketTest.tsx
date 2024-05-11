@@ -1,27 +1,48 @@
-// src/App.tsx
-import React from 'react';
-import useWebSocket from 'react-use-websocket';
-import { io } from 'socket.io-client';
+// WebSocketTest.js
 
-
-const WS_URL = 'ws://127.0.0.1:5000'; // Use the same URL as your Flask app
+import React, { useState, useEffect } from "react";
+import socket from "./socket"; // Import the socket object
 
 function WebSocketTest() {
+    const [messages, setMessages] = useState([]);
+    const [data, setData] = useState();
 
-    const URL = process.env.NODE_ENV === 'production' ? undefined : 'http://localhost:5000';
-    //@ts-ignore
-    const socket = io(URL, {
-        autoConnect: false
-    });
-    socket.connect()
+    useEffect(() => {
+        // Connect when the component mounts
+        socket.connect();
+
+        // Emit "user_join" event
+        socket.emit("user_join", "Manuel");
+
+        // Listen for "chat" events
+        socket.on("chat", (data) => {
+            setData(data);
+        });
+
+        // Clean up: disconnect when the component unmounts
+        return () => {
+            socket.disconnect();
+        };
+    }, []); // Empty dependency array ensures this effect runs only once
+    useEffect(() => { console.log(messages) }, [messages])
+
+    useEffect(() => {
+        console.log("data updated received")
+        if (data) {
+            setMessages((messages) => [...messages, data]);
+        }
+    }, [data])
     return (
         <>
-            <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossOrigin="anonymous"></script>
-            <div className="App">
-                <h1>Hello WebSockets!</h1>
-            </div>
+            <h1>Hello WebSockets!</h1>
+            {messages.map((message) => {
+                return <div>
+                    {JSON.stringify(message)}
+                </div>
+            })}
         </>
     );
 }
 
 export default WebSocketTest;
+
