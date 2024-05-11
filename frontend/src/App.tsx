@@ -37,8 +37,8 @@ export default function App() {
         </Box>
         <Divider />
         <Box height={"87vh"} sx={{ display: "flex", width: '100vw' }}>
-          {/*for websockets*/}
           <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossOrigin="anonymous"></script>
+          {/*script tag is for websockets to work*/}
           <RouterProvider router={router} />
         </Box>
       </ThemeProvider>
