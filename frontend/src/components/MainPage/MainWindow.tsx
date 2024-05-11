@@ -50,12 +50,13 @@ function MainWindow() {
                     justifyContent: "center",
                 }}
             >
-                <div style={{ maxWidth: '500px', width: '100%', marginBottom: "20px" }}>
+                <div style={{ borderRadius:'30px', overflow: 'hidden', width: '80%', marginBottom: "100px" }}>
                     <AudioPlayer
                         autoPlay
                         src={`${backendUrl}/stream/mp3/${filename}`}
                         showSkipControls={true}
                         onPlay={(e) => console.log('onPlay')}
+                        style={{ backgroundColor: '#F2F2F2' }}
                     />
                 </div>
             </Box>
