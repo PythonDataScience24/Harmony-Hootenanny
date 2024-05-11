@@ -1,1 +1,1 @@
-node_modules
+# added .gitignore files to subdirectories so the frontend won't get mixed with the backend.

@@ -41,8 +41,8 @@ function SongQueue() {
         <Stack spacing={2}>
           {songList.map((song, index) => {
             return (
-              <>
-                {index == 0 ? <Box>Next Up:</Box> : <></>}
+              <Box key={index}>
+                {index == 0 ? <Box key={"firstSong"}>Next Up:</Box> : <></>}
                 <Paper elevation={1} key={index}>
                   <Box sx={{ padding: "10px" }} display={"flex"} flexDirection={"column"} gap={"5px"} >
                     <Box >Title: {song.title}</Box>
@@ -50,12 +50,12 @@ function SongQueue() {
                     <Box>Duration: {song.duration}</Box>
                   </Box>
                 </Paper>
-              </>
+              </Box>
             )
           })}
           {songList.map((song, index) => {
             return (
-              <>
+              <Box key={index}>
                 <Paper elevation={1} key={index}>
                   <Box sx={{ padding: "10px" }} display={"flex"} flexDirection={"column"} gap={"5px"} >
                     <Box >Title: {song.title}</Box>
@@ -63,12 +63,12 @@ function SongQueue() {
                     <Box>Duration: {song.duration}</Box>
                   </Box>
                 </Paper>
-              </>
+              </Box>
             )
           })}
           {songList.map((song, index) => {
             return (
-              <>
+              <Box key={index}>
                 <Paper elevation={1} key={index}>
                   <Box sx={{ padding: "10px" }} display={"flex"} flexDirection={"column"} gap={"5px"} >
                     <Box >Title: {song.title}</Box>
@@ -76,7 +76,7 @@ function SongQueue() {
                     <Box>Duration: {song.duration}</Box>
                   </Box>
                 </Paper>
-              </>
+              </Box>
             )
           })}
         </Stack>
