@@ -1,6 +1,13 @@
-import { io } from 'socket.io-client';
+import { io } from "socket.io-client";
 
-// "undefined" means the URL will be computed from the `window.location` object
-const URL = process.env.NODE_ENV === 'production' ? undefined : 'http://localhost:5000';
+const URL = process.env.NODE_ENV === "production" ? undefined : "http://localhost:5000";
 // @ts-ignore
-export const socket = io(URL);
+const socket = io(URL, {
+    autoConnect: false,
+    cors: {
+        origin: "http://localhost:5000",
+        methods: ["GET", "POST"],
+    },
+});
+
+export default socket;
