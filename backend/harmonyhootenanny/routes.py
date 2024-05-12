@@ -3,6 +3,7 @@ import os
 from flask import Blueprint, request, jsonify, send_from_directory
 from pytube import YouTube
 
+
 # Create a blueprint for your main routes
 main = Blueprint("main", __name__)
 
@@ -27,18 +28,43 @@ def search_songs():
     return jsonify({'suggestions': suggestions})
 
 # download endpoint
-@main.route('/download',)
-def download_youtube_video():
+@main.route('/api/download/youtube', methods=['POST'])
+def download_youtube():
     youtube_link = request.json.get('youtube_link')
     if not youtube_link:
-        return 'No YouTube link provided', 400
+        return jsonify({'error': 'No YouTube link provided'}), 400
+
     try:
-        yt = YouTube(youtube_link)
-        stream = yt.streams.filter(only_audio=True, file_extension='mp3').first()
-        if stream:
-            stream.download(output_path='./songs/')
-            return 'Video downloaded successfully', 200
+        mp3_path = download_youtube_mp3(youtube_link)
+        if mp3_path:
+            return jsonify({'message': 'Video downloaded successfully', 'mp3_path': mp3_path}), 200
         else:
-            return 'No MP3 stream available for this video', 400
+            return jsonify({'error': 'Failed to download video'}), 500
     except Exception as e:
-        return str(e), 500
+        return jsonify({'error': str(e)}), 500
+    
+
+def download_youtube_mp3(youtube_link):
+    output_directory = './songs'
+    
+    try:
+        # Create YouTube video object
+        yt = YouTube(youtube_link)
+        
+        # Select MP3 stream (if available)
+        stream = yt.streams.filter(only_audio=True, file_extension='mp4').first()
+        
+        if stream:
+            # Download and save MP3
+            mp3_path = os.path.join(output_directory, f"{yt.title}.mp3")
+            stream.download(output_path=output_directory, filename=f"{yt.title}.mp3")  # Set filename to desired value
+            print(f"Success downloading YouTube video")
+            return mp3_path  # Return path to downloaded MP3 file
+        else:
+            print(f"No success downloading YouTube video, as no MP3 download available")
+            return None  # Return None if no MP3 stream available
+    except Exception as e:
+        print(f"Error downloading YouTube video: {e}")
+        return None
+    
+
