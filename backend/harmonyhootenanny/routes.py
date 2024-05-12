@@ -11,7 +11,7 @@ main = Blueprint("main", __name__)
 # Endpoint to stream an mp3 file from the server
 @main.route('/stream/mp3/<filename>')
 def stream_mp3(filename):
-    mp3_directory = './songs' # Path to the directory where MP3 files are stored
+    mp3_directory = '../songs' # Path to the directory where MP3 files are stored
     return send_from_directory(mp3_directory, filename)
 
 # Search endpoint that looks for files matching the query in the song directory
