@@ -6,11 +6,13 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import axios, { AxiosError } from "axios";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function AuthForm() {
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [message, setMessage] = useState("");
   const [redirectToHome, setRedirectToHome] = useState(false);
+  const { login } = useAuth();
 
   const handleSubmit = async (
     event: FormEvent<HTMLFormElement>
@@ -35,15 +37,9 @@ export default function AuthForm() {
     try {
       const response = await axios.post(url, userDetails);
       console.log("Success:", response.data);
-
-      // Store user data in local storage
-      localStorage.setItem(
-        "userData",
-        JSON.stringify({
-          username: userDetails.username,
-          //userId: response.data.userId,
-        })
-      );
+      // Login user
+      let username = userDetails.username;
+      login(JSON.stringify({ username }));
 
       setMessage("Login successful");
       setRedirectToHome(true); // Set the redirect state to true upon successful login/signup
