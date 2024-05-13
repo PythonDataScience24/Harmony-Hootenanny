@@ -8,8 +8,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { DARK_THEME } from "./colorthemes";
-import LoginButton from "./components/MainPage/LoginButton";
-import Login from "./components/AuthForm/AuthForm";
+import LoginLogoutButton from "./components/MainPage/LoginLogoutButton";
+import AuthForm from "./components/AuthForm/AuthForm";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -27,7 +27,7 @@ export default function App() {
     },
     {
       path: "/login",
-      element: <Login />,
+      element: <AuthForm />,
     },
   ]);
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -41,14 +41,6 @@ export default function App() {
     [prefersDarkMode]
   );
 
-  const checkAuthStatus = () => {
-    const userData = localStorage.getItem("userData");
-    return userData
-      ? console.log(JSON.parse(userData))
-      : console.log("No user logged in");
-  };
-  checkAuthStatus();
-
   return (
     <StrictMode>
       <ThemeProvider theme={theme}>
@@ -59,10 +51,16 @@ export default function App() {
               Harmony Hootenany
             </Link>
           </h1>
-          <LoginButton />
+          <LoginLogoutButton />
         </Box>
         <Divider />
         <Box height={"87vh"} sx={{ display: "flex", width: "100vw" }}>
+          <script
+            src="https://cdn.socket.io/4.6.0/socket.io.min.js"
+            integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
+            crossOrigin="anonymous"
+          ></script>
+          {/*script tag is for websockets to work*/}
           <RouterProvider router={router} />
         </Box>
       </ThemeProvider>

@@ -12,8 +12,12 @@ def get_db_connection():
         Connection: use .cursor().execute(query) to execute queries on the connection object.
     """
     conn = sqlite3.connect("database.db")
+    conn.row_factory = sqlite3.Row
+    print("Successfully connected to database")
     try:
         yield conn
+    except sqlite3.Error as e:
+        print("SQLite error:", e)
     finally:
         conn.close()
         print("con closed")
@@ -27,7 +31,7 @@ def init_db() -> None:
         with get_db_connection() as conn, open('schema.sql', mode='r') as schema:
             conn.cursor().executescript(schema.read())
             conn.commit()
-        print("Database initialized")
+            print("Database initialized")
     except sqlite3.Error as e:
         print(f"SQLite error code: {e.sqlite_errorcode}")
         print(f"SQLite error name: {e.sqlite_errorname}")
@@ -65,4 +69,4 @@ if __name__ == "__main__":
     """
     use for developing or setting up the database.
     """
-    # init_db() # if no database.db file exists
+    #init_db() # if no database.db file exists

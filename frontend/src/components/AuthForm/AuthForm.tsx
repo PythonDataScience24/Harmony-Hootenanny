@@ -1,4 +1,5 @@
 import React, { FormEvent, useState } from "react";
+import { Navigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
@@ -9,6 +10,7 @@ import axios, { AxiosError } from "axios";
 export default function AuthForm() {
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [message, setMessage] = useState("");
+  const [redirectToHome, setRedirectToHome] = useState(false);
 
   const handleSubmit = async (
     event: FormEvent<HTMLFormElement>
@@ -44,6 +46,7 @@ export default function AuthForm() {
       );
 
       setMessage("Login successful");
+      setRedirectToHome(true); // Set the redirect state to true upon successful login/signup
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>; // Specify the expected response shape
@@ -62,6 +65,11 @@ export default function AuthForm() {
     setIsLoginMode(!isLoginMode);
     setMessage(""); // Reset message when switching mode
   };
+
+  // Render Navigate component when redirectToHome is true
+  if (redirectToHome) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <Container component="main" maxWidth="sm">
