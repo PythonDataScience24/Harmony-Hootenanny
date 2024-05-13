@@ -1,6 +1,7 @@
 import { Box, Button, Divider, Link } from "@mui/material";
 import MainPage from "./components/MainPage/MainPage";
 import SecondPage from "./components/SecondPage";
+import RoomSelection from "./components/SecondPage/RoomSelection";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { StrictMode, useMemo } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -14,6 +15,10 @@ export default function App() {
   const router = createBrowserRouter([
     {
       path: "/",
+      element: <RoomSelection />,
+    },
+    {
+      path: "/main",
       element: <MainPage />,
     },
     {

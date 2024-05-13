@@ -26,7 +26,7 @@ pip install -r requirements.txt
 After the packages are installed you can start the backend server using the following command:
 
 ```
-python app.py
+py run.py
 ```
 
 ### Frontend Setup
