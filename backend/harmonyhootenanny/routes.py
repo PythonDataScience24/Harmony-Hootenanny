@@ -55,9 +55,10 @@ def signup():
     data = request.json
     username = data.get('username')
     password = data.get('password')
-    confirm_password = data.get('confirm_password')
+    confirm_password = data.get('confirmPassword')
 
     # Basic validation
+    print(confirm_password, password)
     if not username or not password:
         return jsonify({"error": "Missing fields"}), 400
     if password != confirm_password:

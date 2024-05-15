@@ -14,14 +14,14 @@ def get_db_connection():
     """
     conn = sqlite3.connect("database.db")
     conn.row_factory = sqlite3.Row
-    print("Successfully connected to database")
+    # print("Successfully connected to database")
     try:
         yield conn
     except sqlite3.Error as e:
         print("SQLite error:", e)
     finally:
         conn.close()
-        print("con closed")
+        # print("con closed")
 
     
 def init_db() -> None:
@@ -73,7 +73,7 @@ def add_song_to_db(title:str, artist:str, duration:int, fileName:str):
             conn.cursor().execute("INSERT INTO songs (title, artist, duration, src) VALUES (?, ?, ?, ?)",\
                            (title, artist, duration, fileName))
             conn.commit()
-            print("Song successfully added to database")
+            # print("Song successfully added to database")
     except sqlite3.Error as e:
         print(f"SQLite error code: {e.sqlite_errorcode}")
         print(f"SQLite error name: {e.sqlite_errorname}")
@@ -87,7 +87,7 @@ def add_song_to_queue(songId:int, roomId:int, userId:int):
             conn.cursor().execute("INSERT INTO queues (song_id, room_id, user_id) VALUES (?, ?, ?)",\
                            (songId, roomId, userId))
             conn.commit()
-            print("Song successfully added to queue")
+            # print("Song successfully added to queue")
     except sqlite3.Error as e:
         print(f"SQLite error code: {e.sqlite_errorcode}")
         print(f"SQLite error name: {e.sqlite_errorname}")
@@ -100,7 +100,7 @@ def remove_song_from_queue(queueIndex:int):
         with get_db_connection() as conn:
             conn.cursor().execute(f"DELETE FROM queues WHERE queue_index = ?",(queueIndex,))
             conn.commit()
-            print("Song successfully removed from queue")
+            # print("Song successfully removed from queue")
     except sqlite3.Error as e:
         print(f"SQLite error code: {e.sqlite_errorcode}")
         print(f"SQLite error name: {e.sqlite_errorname}")
@@ -111,15 +111,14 @@ def get_queue(roomId:int):
     """
     try:
         with get_db_connection() as conn:
-            cursor = conn.cursor().execute("SELECT * FROM queues WHERE room_id = ?",(roomId,))
+            cursor = conn.cursor().execute("SELECT title, artist, duration FROM queues LEFT JOIN songs USING(song_id) WHERE room_id = ?",(roomId,))
             rows = cursor.fetchall()
             # Convert the results into the desired format
             song_queue = [
                 {"title": row[0], "artist": row[1], "duration": row[2]}
                 for row in rows
             ]
-            print("Queue successfully selected")
-            print(song_queue)
+            # print("Queue successfully selected")
             return song_queue
     except sqlite3.Error as e:
         print(f"SQLite error code: {e.sqlite_errorcode}")
