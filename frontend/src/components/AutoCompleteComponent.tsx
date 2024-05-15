@@ -64,12 +64,40 @@ const AutoCompleteComponent = ({ onSongSelect }: {onSongSelect: any}) => {
   };
 
   const inputProps = {
-    placeholder: "Search for a song",
+    placeholder: "Search for a song or paste a YouTube link",
     value,
     // @ts-ignore
     onChange: (_, { newValue }) => setValue(newValue),
   };
-
+  const handleKeyPress = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault(); // Prevent form submission
+      try {
+        const response = await fetch('http://localhost:5000/api/download/youtube', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ youtube_link: value })
+        });
+        const data = await response.json();
+        if (response.ok) {
+          // Handle success
+          setValue(`Video downloaded successfully`);
+          setTimeout(() => setValue(""), 5000); // Clear message after 5 seconds
+        } else {
+          // Handle error
+          setValue(`Failed to download video`);
+          setTimeout(() => setValue(""), 5000); // Clear message after 5 seconds
+        }
+      } catch (error) {
+        // Handle fetch error
+        setValue(`Error downloading video`);
+        setTimeout(() => setValue(""), 5000); // Clear message after 5 seconds
+      }
+      setValue(""); // Clear the input field
+    }
+  };
   return (
     <Autosuggest
       theme={theme}
