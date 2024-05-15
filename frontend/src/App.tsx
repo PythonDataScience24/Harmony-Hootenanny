@@ -2,7 +2,7 @@ import { Box, Button, Divider, Link } from "@mui/material";
 import MainPage from "./components/MainPage/MainPage";
 import SecondPage from "./components/SecondPage";
 import RoomSelection from "./components/SecondPage/RoomSelection";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { StrictMode, useMemo } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -12,24 +12,6 @@ import LoginLogoutButton from "./components/MainPage/LoginLogoutButton";
 import AuthForm from "./components/AuthForm/AuthForm";
 
 export default function App() {
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <RoomSelection />,
-    },
-    {
-      path: "/main",
-      element: <MainPage />,
-    },
-    {
-      path: "/test",
-      element: <SecondPage />,
-    },
-    {
-      path: "/login",
-      element: <AuthForm />,
-    },
-  ]);
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const theme = useMemo(
     () =>
@@ -61,7 +43,12 @@ export default function App() {
             crossOrigin="anonymous"
           ></script>
           {/*script tag is for websockets to work*/}
-          <RouterProvider router={router} />
+          <Routes>
+            <Route path="/" element={<RoomSelection />} />
+            <Route path="/main" element={<MainPage />} />
+            <Route path="/test" element={<SecondPage />} />
+            <Route path="/login" element={<AuthForm />} />
+          </Routes>
         </Box>
       </ThemeProvider>
     </StrictMode>
