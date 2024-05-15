@@ -1,5 +1,5 @@
 import { Box, Divider } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { act, useEffect, useState } from 'react'
 import Rooms from './Rooms'
 import MainWindow from './MainWindow'
 import SongQueue from './SongQueue'
@@ -12,12 +12,16 @@ function MainPage() {
   const [queue, setQueue] = useState();
   const [playing, setPlaying] = useState("");
   const [progress, setProgress] = useState(0);
+  const [activeUsers, setactiveUsers] = useState();
 
   let userData = "";
   if (Cookies.get("userData")) {
     //@ts-ignore
     userData = JSON.parse(Cookies.get("userData"));
   }
+  useEffect(()=>{
+    console.log(activeUsers)
+  },[activeUsers])
   useEffect(() => {
     // Connect when the component mounts
     socket.connect();
@@ -30,8 +34,14 @@ function MainPage() {
     socket.on("song_queue", (message) => {
       setQueue(message.queue);
     });
+    socket.on("active_users", (message) => {
+      setactiveUsers(message.users);
+    });
     socket.on("currently_playing", (message) => {
-      setPlaying(message.track);
+      // {'title': 'Summer Vibes', 'artist': 'Sunny Beats', 
+      // 'filename': 'https://example.com/song1.mp3', 
+      // 'progress': -7079, 'queue_index': 1}
+      setPlaying(message.filename);
       setProgress(Number(message.progress));
     });
 
@@ -58,7 +68,7 @@ function MainPage() {
 
         <Divider orientation="vertical" />
         <Box sx={{ flexGrow: 7, height: "100%" }}>
-          <MainWindow currentlyPlaying={playing} progress={progress}></MainWindow>
+          <MainWindow currentlyPlaying={playing} progress={progress} activeUsers={activeUsers}></MainWindow>
         </Box>
 
         <Divider orientation="vertical" />

@@ -7,12 +7,10 @@ import { PeopleInChannel } from './PeopleInChannel';
 import socket from '../../socket';
 import Cookies from 'js-cookie';
 
-function MainWindow({ currentlyPlaying, progress }: { currentlyPlaying: string, progress: number }) {
-    const [message, setMessage] = useState();
+function MainWindow({ currentlyPlaying, progress, activeUsers }: { currentlyPlaying: string, progress: number, activeUsers?: string[]}) {
     const [filename, setFilename] = useState(encodeURIComponent(currentlyPlaying));
     const backendUrl = "http://localhost:5000";
     const users = ["Aline", "Jerry", "Nils", "Janina"]
-    console.log(`${backendUrl}/stream/mp3/${encodeURIComponent(currentlyPlaying)}`)
 
 
     // Find the existing <audio> element on the page
@@ -41,7 +39,7 @@ function MainWindow({ currentlyPlaying, progress }: { currentlyPlaying: string, 
                     alignItems: "center",
                 }}
             >
-                <PeopleInChannel users={users} />
+                <PeopleInChannel users={activeUsers} />
                 <div>
                     <AutoCompleteComponent
                         onSongSelect={(selectedTitle: string) =>

@@ -6,6 +6,7 @@ import React, {
   ReactNode,
 } from "react";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -29,6 +30,7 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Initially check if the user is logged in by checking the cookie
@@ -41,16 +43,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const login = (userData: string) => {
-    console.log(isLoggedIn);
     Cookies.set("userData", userData.trim(), { expires: 1 });
     setIsLoggedIn(true);
   };
 
   const logout = () => {
-    console.log(isLoggedIn);
-
     Cookies.remove("userData");
     setIsLoggedIn(false);
+    navigate("/"); // Navigate to room selection after logout
   };
 
   return (
