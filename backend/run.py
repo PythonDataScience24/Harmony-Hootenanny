@@ -1,3 +1,4 @@
+"""Main function of our server, run this file to start the backend"""
 from flask_cors import CORS
 from database import init_db
 from harmonyhootenanny import create_app, socketio
