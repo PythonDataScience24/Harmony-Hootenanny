@@ -63,7 +63,20 @@ def set_username(username) -> None:
         print(f"SQLite error code: {e.sqlite_errorcode}")
         print(f"SQLite error name: {e.sqlite_errorname}")
 
+def add_song_to_db(fileName:str, title:str, artist:str, duration:int):
+    pass
 
+def add_song_to_queue(songId:int, roomId:int, userId:int):
+    pass
+
+def remove_song_from_queue(queueIndex:int):
+    pass
+
+def get_queue(roomId:int):
+    pass
+
+def get_current_song(roomId:int):
+    pass
 
 if __name__ == "__main__":
     """
