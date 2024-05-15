@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import Room from "./Room";
 import { Box, Button, Typography } from "@mui/material";
@@ -8,10 +8,22 @@ import Cookies from "js-cookie";
 
 const RoomSelection: React.FC = () => {
   const { isLoggedIn } = useAuth();
+  const [username, setUsername] = useState<string>("");
   const navigate = useNavigate();
 
-  // Retrieve the username from the cookies
-  const username = Cookies.get("userData");
+  useEffect(() => {
+    // Retrieve the username from the cookies
+    const userDataJson = Cookies.get("userData");
+    if (userDataJson) {
+      const userData = JSON.parse(userDataJson);
+      // Extract the username and save it in a variable
+      const username: string = userData.username;
+      setUsername(username);
+      console.log(username); // Output: qwert
+    } else {
+      console.log("No user data found in cookies.");
+    }
+  }, []);
 
   const handleRoomClick = (roomPath: string) => {
     if (isLoggedIn) {
