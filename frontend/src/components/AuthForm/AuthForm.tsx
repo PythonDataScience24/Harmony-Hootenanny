@@ -24,7 +24,6 @@ export default function AuthForm() {
       password: data.get("password"),
       confirmPassword: data.get("confirmPassword"),
     };
-
     const url = isLoginMode
       ? "http://localhost:5000/login"
       : "http://localhost:5000/signup";
