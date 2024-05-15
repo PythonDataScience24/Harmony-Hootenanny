@@ -69,4 +69,4 @@ if __name__ == "__main__":
     """
     use for developing or setting up the database.
     """
-    #init_db() # if no database.db file exists
+    init_db() # if no database.db file exists or schema.sql was updated
