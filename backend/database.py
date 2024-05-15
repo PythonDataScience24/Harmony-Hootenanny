@@ -152,6 +152,36 @@ def get_current_song(roomId:int) -> dict:
         print(f"SQLite error code: {e.sqlite_errorcode}")
         print(f"SQLite error name: {e.sqlite_errorname}")
 
+def get_next_song(roomId: int) -> dict:
+    try:
+        with get_db_connection() as conn:
+            result = conn.cursor().execute('SELECT \
+                                    q.queue_index, \
+                                    s.title AS song_title, \
+                                    s.artist AS song_artist, \
+                                    s.duration AS song_duration, \
+                                    s.src AS file_path \
+                                    FROM queues AS q \
+                                    INNER JOIN songs AS s ON q.song_id = s.song_id \
+                                    WHERE q.room_id = ? AND q.queue_index > \
+                                    (SELECT queue_index FROM rooms WHERE room_id = ?) \
+                                    ORDER BY q.queue_index ASC LIMIT 1;', (roomId, roomId))
+            next_data = result.fetchone()
+            if next_data:
+                next_song: dict = {
+                    "queue_index": next_data[0],
+                    "title": next_data[1],
+                    "artist": next_data[2],
+                    "duration": next_data[3],
+                    "filename": next_data[4]
+                }
+                return next_song
+            else:
+                return None
+    except sqlite3.Error as e:
+        print(f"SQLite error code: {e.sqlite_errorcode}")
+        print(f"SQLite error name: {e.sqlite_errorname}")
+        return None
 
 if __name__ == "__main__":
     """

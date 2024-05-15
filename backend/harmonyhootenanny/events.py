@@ -1,11 +1,15 @@
-from database import get_current_song, get_queue
+from database import get_current_song, get_queue, get_next_song
 from .extensions import socketio
 from flask_socketio import emit, join_room, leave_room
 from flask import request
+from .modules.songcompletionchecker import SongScheduler
+import time
 
 # Initialize an empty dictionary to store active users in each room
 active_users_by_room = {}
 sid_to_user = {}
+schedulers = {}  # Store schedulers for each room
+
 @socketio.on("connect")
 def handle_connect():
     print("client connected")
@@ -15,7 +19,6 @@ def handle_connect():
 def handle_disconnect():
     print("client disconnected")
     room_id = 0
-    print(active_users_by_room, sid_to_user)
     username_left = sid_to_user[request.sid]
     for key, menge in active_users_by_room.items():
         for username in menge:
@@ -26,49 +29,49 @@ def handle_disconnect():
     active_users_by_room[key].remove(username_left)
     del sid_to_user[request.sid]
 
-    print(active_users_by_room, sid_to_user)
-
-    leave_room(key, request.sid)
-
-    emit("active_users", {"users":list(active_users_by_room[room_id])}, room=key)
+    leave_room(room_id, request.sid)
+    emit("active_users", {"users":list(active_users_by_room[room_id])}, room=room_id)
 
 @socketio.on("join_room")
 def handle_join_room(room_id: int, username: str):
     # Add the user to the room in the database (if needed)
     # Example: UserRoom.create(user_id=user_id, room_id=room_id)
+    print(get_queue(room_id))
 
     sid_to_user[request.sid] = username
-
-
     join_room(room_id, request.sid)
     # Add the user's request.sid to the active users list for the room
     if room_id not in active_users_by_room:
         active_users_by_room[room_id] = set()
     active_users_by_room[room_id].add(username)
 
-    print(active_users_by_room)
-    print(sid_to_user)
     # Emit "active_users" event to all users in the same room
     emit("active_users", {"users": list(active_users_by_room[room_id])}, to=room_id)
 
-    # Emit "song_queue" and "currently_playing" events to the new user
-    
-    # get_song_queue_for_user(room_id)  # Implement this function
-    currently_playing = "Men At Work - Down Under (Official HD Video).mp3"# get_currently_playing_track(room_id)  # Implement this function
-    print(active_users_by_room[room_id])
+    # Create new SongScheduler if room does not already have one
+    if room_id not in schedulers:
+        schedulers[room_id] = SongScheduler(room_id, socketio)
+        schedulers[room_id].start_scheduler()
 
+    currently_playing = get_current_song(room_id)
+    if currently_playing and 'duration' in currently_playing:
+        start_song(room_id, currently_playing)
+    else:
+        emit("currently_playing", {"track": None, "progress": 0}, room=request.sid)
 
     emit("song_queue", {"queue": get_queue(room_id)}, room=request.sid)
 
+    #emit("currently_playing", get_current_song(room_id), room=request.sid)
+    #emit("active_users", {"users": list(active_users_by_room[room_id])}, room=room_id)
 
-    emit("currently_playing", get_current_song(room_id), room=request.sid)
-
-
-    emit("active_users", {"users":list(active_users_by_room[room_id])}, room=room_id)
-
-    pass
-
-
+def start_song(room_id, song):
+    if 'duration' in song:
+        start_time = time.time()
+        duration = song['duration']
+        schedulers[room_id].add_song(start_time, duration)
+        emit("currently_playing", {"track": song['filename'], "progress": 0}, room=room_id)
+    else:
+        print(f"Error: Song data missing 'duration' key for room_id: {room_id}")
 
 
 
