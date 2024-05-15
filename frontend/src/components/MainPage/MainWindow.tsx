@@ -4,13 +4,25 @@ import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import AutoCompleteComponent from '../AutoCompleteComponent';
 import { PeopleInChannel } from './PeopleInChannel';
-import WebSocketTest from './WebSocketTest';
+import socket from '../../socket';
+import Cookies from 'js-cookie';
 
-function MainWindow() {
+function MainWindow({ currentlyPlaying, progress }: { currentlyPlaying: string, progress: number }) {
     const [message, setMessage] = useState();
-    const [filename, setFilename] = useState(""); // Empty string throws 404 error on first load
+    const [filename, setFilename] = useState(encodeURIComponent(currentlyPlaying));
     const backendUrl = "http://localhost:5000";
     const users = ["Aline", "Jerry", "Nils", "Janina"]
+    console.log(`${backendUrl}/stream/mp3/${encodeURIComponent(currentlyPlaying)}`)
+
+
+    // Find the existing <audio> element on the page
+    const audioElement = document.querySelector('audio');
+    if (audioElement) {
+        // Update the current time
+        audioElement.currentTime = progress;
+    } else {
+        console.error('No <audio> element found on the page.');
+    }
     return (
         <Box
             sx={{
@@ -37,10 +49,6 @@ function MainWindow() {
                         }
                     />
                 </div>
-                
-                <div>
-                    <WebSocketTest/>
-                </div>
             </Box>
             <Box
                 sx={{
@@ -48,10 +56,10 @@ function MainWindow() {
                     justifyContent: "center",
                 }}
             >
-                <div style={{ borderRadius:'30px', overflow: 'hidden', width: '80%', marginBottom: "100px" }}>
+                <div style={{ borderRadius: '30px', overflow: 'hidden', width: '80%', marginBottom: "100px" }}>
                     <AudioPlayer
                         autoPlay
-                        src={`${backendUrl}/stream/mp3/${filename}`}
+                        src={`${backendUrl}/stream/mp3/${encodeURIComponent(currentlyPlaying)}`}
                         showSkipControls={true}
                         onPlay={(e) => console.log('onPlay')}
                         style={{ backgroundColor: '#F2F2F2' }}

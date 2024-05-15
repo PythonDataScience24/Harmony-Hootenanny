@@ -2,3 +2,4 @@
 #songs # remove '#' at the beginning of this line to stop synchronising the songs directory
 
 harmonyhootenanny/__pycache__
+harmonyhootenanny/modules/__pycache__

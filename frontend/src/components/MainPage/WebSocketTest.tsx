@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import socket from "../../socket";
+import SongQueue from "./SongQueue";
 
 function WebSocketTest() {
     const [messages, setMessages] = useState([]);
@@ -15,8 +16,9 @@ function WebSocketTest() {
         socket.emit("user_join", "Manuel");
 
         // Listen for "chat" events
-        socket.on("chat", (data) => {
+        socket.on("song_queue", (data) => {
             setData(data);
+            console.log(data);
         });
 
         // Clean up: disconnect when the component unmounts
@@ -24,7 +26,7 @@ function WebSocketTest() {
             socket.disconnect();
         };
     }, []); // Empty dependency array ensures this effect runs only once
-    useEffect(() => { console.log(messages) }, [messages])
+    //useEffect(() => { console.log(messages) }, [messages])
 
     useEffect(() => {
         console.log("data updated received")
