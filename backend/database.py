@@ -2,6 +2,7 @@
 
 import sqlite3
 from contextlib import contextmanager
+import time
 
 # Create a context manager for database connections
 @contextmanager
@@ -76,10 +77,44 @@ def get_queue(roomId:int):
     pass
 
 def get_current_song(roomId:int):
-    pass
+    currently_playing: dict = {
+        "title":"", 
+        "artist":"", 
+        "filename":"", 
+        "duration":0, 
+        "queue_index":0
+        }
+    try:
+        with get_db_connection() as conn:
+            result = conn.cursor().execute('SELECT \
+                                    r.song_start_time, \
+                                    s.title AS song_title, \
+                                    s.artist AS song_artist, \
+                                    s.src AS file_path, \
+                                    r.queue_index as queue_index \
+                                    FROM rooms AS r \
+                                    INNER JOIN queues AS q ON r.queue_index = q.queue_index \
+                                    INNER JOIN songs AS s ON q.song_id = s.song_id \
+                                    INNER JOIN users AS u ON q.user_id = u.user_id \
+                                    WHERE r.room_id = ?;'
+                                  , (roomId,))
+            current_data = result.fetchone()
+            currently_playing: dict = {
+        "title":current_data[1], 
+        "artist":current_data[2], 
+        "filename":current_data[3], 
+        "progress":int(time.time())-current_data[0], 
+        "queue_index":current_data[4]
+        }   
+            return currently_playing
+    except sqlite3.Error as e:
+        print(f"SQLite error code: {e.sqlite_errorcode}")
+        print(f"SQLite error name: {e.sqlite_errorname}")
+
 
 if __name__ == "__main__":
     """
     use for developing or setting up the database.
     """
-    init_db() # if no database.db file exists or schema.sql was updated
+    # init_db() # if no database.db file exists or schema.sql was updated
+    print(get_current_song(1))
