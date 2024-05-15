@@ -76,14 +76,7 @@ def remove_song_from_queue(queueIndex:int):
 def get_queue(roomId:int):
     pass
 
-def get_current_song(roomId:int):
-    currently_playing: dict = {
-        "title":"", 
-        "artist":"", 
-        "filename":"", 
-        "duration":0, 
-        "queue_index":0
-        }
+def get_current_song(roomId:int) -> dict:
     try:
         with get_db_connection() as conn:
             result = conn.cursor().execute('SELECT \
@@ -100,12 +93,12 @@ def get_current_song(roomId:int):
                                   , (roomId,))
             current_data = result.fetchone()
             currently_playing: dict = {
-        "title":current_data[1], 
-        "artist":current_data[2], 
-        "filename":current_data[3], 
-        "progress":int(time.time())-current_data[0], 
-        "queue_index":current_data[4]
-        }   
+                "title":current_data[1], 
+                "artist":current_data[2], 
+                "filename":current_data[3], 
+                "progress":int(time.time())-current_data[0], 
+                "queue_index":current_data[4]
+            }   
             return currently_playing
     except sqlite3.Error as e:
         print(f"SQLite error code: {e.sqlite_errorcode}")
