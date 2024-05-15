@@ -56,6 +56,7 @@ function MainWindow({ currentlyPlaying, progress, activeUsers }: { currentlyPlay
             >
                 <div style={{ borderRadius: '30px', overflow: 'hidden', width: '80%', marginBottom: "100px" }}>
                     <AudioPlayer
+                        autoPlay
                         src={`${backendUrl}/stream/mp3/${encodeURIComponent(currentlyPlaying)}`}
                         showSkipControls={true}
                         onPlay={(e) => console.log('onPlay')}
