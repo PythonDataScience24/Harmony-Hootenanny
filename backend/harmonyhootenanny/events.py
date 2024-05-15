@@ -1,6 +1,7 @@
 from .extensions import socketio
 from flask_socketio import emit
 from flask import request
+import json
 
 # Initialize an empty dictionary to store active users in each room
 active_users_by_room = {}
@@ -23,7 +24,7 @@ def handle_disconnect():
 def handle_join_room(room_id: int, username: str):
     # Add the user to the room in the database (if needed)
     # Example: UserRoom.create(user_id=user_id, room_id=room_id)
-
+    print(username, room_id)
     # Add the user's request.sid to the active users list for the room
     if room_id not in active_users_by_room:
         active_users_by_room[room_id] = set()
@@ -33,10 +34,38 @@ def handle_join_room(room_id: int, username: str):
     emit("active_users", {"users": list(active_users_by_room[room_id])}, room=room_id)
 
     # Emit "song_queue" and "currently_playing" events to the new user
-    song_queue = get_song_queue_for_user(room_id)  # Implement this function
-    currently_playing = get_currently_playing_track(room_id)  # Implement this function
+    song_queue = [
+    {
+        "title": "Shape of You",
+        "artist": "Ed Sheeran",
+        "duration": "3:53"
+    },
+    {
+        "title": "Bohemian Rhapsody",
+        "artist": "Queen",
+        "duration": "5:55"
+    },
+    {
+        "title": "Blinding Lights",
+        "artist": "The Weeknd",
+        "duration": "3:20"
+    },
+    {
+        "title": "Rolling in the Deep",
+        "artist": "Adele",
+        "duration": "3:48"
+    },
+    {
+        "title": "Hotel California",
+        "artist": "Eagles",
+        "duration": "6:30"
+    }
+]   
+    # get_song_queue_for_user(room_id)  # Implement this function
+    currently_playing = "Men At Work - Down Under (Official HD Video).mp3"# get_currently_playing_track(room_id)  # Implement this function
+    progress = 60
     emit("song_queue", {"queue": song_queue}, room=request.sid)
-    emit("currently_playing", {"track": currently_playing}, room=request.sid)
+    emit("currently_playing", {"track": currently_playing, "progress": progress}, room=request.sid)
 
     pass
 
@@ -55,7 +84,7 @@ def handle_user_join(filename: str):
 
 
 
-
+    """
 
 @socketio.on("user_join")
 def handle_user_join(username):
@@ -70,3 +99,4 @@ def handle_new_message(message):
         if users[user] == request.sid:
             username = user
     emit("chat", {"message": message, "username": username}, broadcast=True)
+    """

@@ -1,34 +1,20 @@
 import { Box, Paper, Stack, styled } from '@mui/material'
 import React from 'react'
 
-function SongQueue() {
-  const songList = [
-    {
-      "title": "Shape of You",
-      "artist": "Ed Sheeran",
-      "duration": "3:53"
-    },
-    {
-      "title": "Bohemian Rhapsody",
-      "artist": "Queen",
-      "duration": "5:55"
-    },
-    {
-      "title": "Blinding Lights",
-      "artist": "The Weeknd",
-      "duration": "3:20"
-    },
-    {
-      "title": "Rolling in the Deep",
-      "artist": "Adele",
-      "duration": "3:48"
-    },
-    {
-      "title": "Hotel California",
-      "artist": "Eagles",
-      "duration": "6:30"
-    }
-  ]
+function SongQueue({ queue }: { queue: [JSON] }) {
+  //@ts-ignore
+  let songList;
+  if (queue === undefined) {
+    songList = [
+      {
+        title: "Not loaded yet",
+        artist: "",
+        duration: ""
+      }
+    ]
+  } else {
+    songList = queue;
+  }
 
   return (
     <>
@@ -45,35 +31,15 @@ function SongQueue() {
                 {index == 0 ? <Box key={"firstSong"}>Next Up:</Box> : <></>}
                 <Paper elevation={1} key={index}>
                   <Box sx={{ padding: "10px" }} display={"flex"} flexDirection={"column"} gap={"5px"} >
-                    <Box >Title: {song.title}</Box>
-                    <Box>Artist: {song.artist}</Box>
-                    <Box>Duration: {song.duration}</Box>
-                  </Box>
-                </Paper>
-              </Box>
-            )
-          })}
-          {songList.map((song, index) => {
-            return (
-              <Box key={index}>
-                <Paper elevation={1} key={index}>
-                  <Box sx={{ padding: "10px" }} display={"flex"} flexDirection={"column"} gap={"5px"} >
-                    <Box >Title: {song.title}</Box>
-                    <Box>Artist: {song.artist}</Box>
-                    <Box>Duration: {song.duration}</Box>
-                  </Box>
-                </Paper>
-              </Box>
-            )
-          })}
-          {songList.map((song, index) => {
-            return (
-              <Box key={index}>
-                <Paper elevation={1} key={index}>
-                  <Box sx={{ padding: "10px" }} display={"flex"} flexDirection={"column"} gap={"5px"} >
-                    <Box >Title: {song.title}</Box>
-                    <Box>Artist: {song.artist}</Box>
-                    <Box>Duration: {song.duration}</Box>
+                    {//@ts-ignore
+                      <Box >Title: {song.title}</Box>
+                    }
+                    {//@ts-ignore
+                      <Box>Artist: {song.artist}</Box>
+                    }
+                    {//@ts-ignore
+                      <Box>Duration: {song.duration}</Box>
+                    }
                   </Box>
                 </Paper>
               </Box>

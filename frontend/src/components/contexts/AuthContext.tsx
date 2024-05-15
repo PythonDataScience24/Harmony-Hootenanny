@@ -42,7 +42,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = (userData: string) => {
     console.log(isLoggedIn);
-    Cookies.set("userData", userData, { expires: 1 });
+    Cookies.set("userData", userData.trim(), { expires: 1 });
     setIsLoggedIn(true);
   };
 
