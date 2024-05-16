@@ -6,7 +6,10 @@ import SongQueue from './SongQueue'
 import Cookies from 'js-cookie'
 import socket from '../../socket'
 
-function MainPage() {
+interface MainPageProps {
+  roomId: number;
+}
+const MainPage: React.FC<MainPageProps> = ({ roomId }) =>{
   const [messages, setMessages] = useState([]);
   const [data, setData] = useState();
   const [queue, setQueue] = useState();
@@ -28,7 +31,7 @@ function MainPage() {
 
     // Emit "join_room" event
     //@ts-ignore
-    socket.emit("join_room", 1, userData.username);
+    socket.emit("join_room", roomId, userData.username);
 
     // Listen for "chat" events
     socket.on("song_queue", (message) => {
@@ -49,7 +52,7 @@ function MainPage() {
     return () => {
       socket.disconnect();
     };
-  }, []); // Empty dependency array ensures this effect runs only once
+  }, [roomId]); // This effect runs whenever roomId changes
 
   useEffect(() => { console.log(data) }, [data])
 
@@ -82,4 +85,12 @@ function MainPage() {
   )
 }
 
-export default MainPage
+export function MainPage1(){
+  return <MainPage roomId={1} />;
+}
+export function MainPage2(){
+  return <MainPage roomId={2}/>;
+}
+export function MainPage3(){
+  return <MainPage roomId={3}/>;
+}
