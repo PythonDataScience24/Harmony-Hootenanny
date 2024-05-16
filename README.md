@@ -72,7 +72,7 @@ Tasks per milestone: read text again
 Since the first milestone we implemented several new features:
 
 - **Login**: We added user authentication to our app, so each user must be logged in to be able to join one of the rooms. This authentication will be used to identify and track the user. This is also preparation for the next milestone, where we will focus on tracking and visualizing user data.
-- **Websockets**: We implemented websocket functionality, so users can now join rooms. When entering a room, the user will retrieve the song queue and listen to the current playing song. All this is updated in real time. The only missing part here is that currently, the logic for tracking when a song finishes is not fully implemented yet and therefore cannot play the next song. In our test data, it is specified that the song started playing on May 16 at 12:34, and since this time has passed, the song will be at 2:44 and not start at 0:00. Additionally, if one user presses pause, it will not pause for all users in the current room.
+- **Websockets**: We implemented websocket functionality, so users can now join rooms. When entering a room, the user will retrieve the song queue and the current playing song from the database. Also all other participants in that room are visible and joining/leaving is updated in real time. The only missing part here is that currently, the logic for tracking when a song finishes is not fully implemented yet and therefore cannot play the next song. In our test data, it is specified that the song started playing on May 16 at 12:34, and since this time has passed, the song will be at 2:44 and not start at 0:00. Additionally, if one user presses pause, it will not pause for all users in the current room.
 
 ## Events
 
