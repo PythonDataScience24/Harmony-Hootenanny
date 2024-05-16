@@ -17,7 +17,7 @@ After cloning the repository change into the backend folder of this project:
 cd backend
 ```
 
-For our application we need the following packages to be installed: `flask`, `flask_socketio` and `flask_cors`. Get them either by using pip install [module] or install them using the `requirements.txt` file:
+For our application we need several packages which can be installed using the `requirements.txt` file:
 
 ```
 pip install -r requirements.txt
@@ -25,8 +25,9 @@ pip install -r requirements.txt
 
 After the packages are installed you can start the backend server using the following command:
 
-```
-py run.py
+```Bash
+py run.py # windows
+python3 run.py # linux
 ```
 
 ### Frontend Setup
@@ -65,6 +66,13 @@ Our mission with **Harmony Hootenanny** is to create a web mp3 player that allow
   To fit this course's agenda more firmly we want to analyze data gathered from users regarding sessions like songs played most often, top artists and hours listened in and display it in a publicly available dashboard.
 
 Tasks per milestone: read text again
+
+## Current changes
+
+Since the first milestone we implemented several new features:
+
+- **Login**: We added user authentication to our app, so each user must be logged in to be able to join one of the rooms. This authentication will be used to identify and track the user. This is also preparation for the next milestone, where we will focus on tracking and visualizing user data.
+- **Websockets**: We implemented websocket functionality, so users can now join rooms. When entering a room, the user will retrieve the song queue and listen to the current playing song. All this is updated in real time. The only missing part here is that currently, the logic for tracking when a song finishes is not fully implemented yet and therefore cannot play the next song. In our test data, it is specified that the song started playing on May 16 at 12:34, and since this time has passed, the song will be at 2:44 and not start at 0:00. Additionally, if one user presses pause, it will not pause for all users in the current room.
 
 ## Events
 

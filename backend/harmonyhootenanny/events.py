@@ -80,8 +80,8 @@ def handle_user_join(filename: str):
     pass
 
 def next_song():
-    emit("currently_playing", {"track": currently_playing, "progress": progress}, room=request.sid)
-
+    #emit("currently_playing", {"track": currently_playing, "progress": progress}, room=request.sid)
+    pass
 
 
     """
