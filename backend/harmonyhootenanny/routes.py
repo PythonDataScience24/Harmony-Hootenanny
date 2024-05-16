@@ -300,3 +300,21 @@ def download_youtube():
     if mp3_path[1]==200:
         return jsonify({'message': 'Video downloaded successfully', 'mp3_path': mp3_path}), 200
     return jsonify({'error': 'Failed to download video'}), 500
+
+def create_rooms():
+    """Create predefined rooms in the database if they don't exist."""
+    room_ids = [1, 2, 3]
+
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+
+        for room_id in room_ids:
+            cursor.execute("SELECT * FROM rooms WHERE room_id = ?", (room_id,))
+            result = cursor.fetchone()
+            if not result:
+                cursor.execute("INSERT INTO rooms (room_id) VALUES (?)", (room_id,))
+
+        conn.commit()
+
+# Call the function when the application starts
+create_rooms()
