@@ -291,6 +291,7 @@ def download_youtube():
         Response object with a JSON message and appropriate HTTP status code.
     """
     youtube_link = request.json.get('youtube_link')
+    print(f"Received YouTube link: {youtube_link}")  # Ausgabe des Links in der Konsole
     if not youtube_link:
         return jsonify({'error': 'No YouTube link provided'}), 400
 

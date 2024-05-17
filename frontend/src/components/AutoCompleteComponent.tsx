@@ -73,6 +73,7 @@ const AutoCompleteComponent = ({ onSongSelect }: {onSongSelect: any}) => {
           },
           body: JSON.stringify({ youtube_link: value })
         });
+        setValue("");
         const data = await response.json();
         console.log(data);
       } catch (error) {
