@@ -34,6 +34,8 @@ def handle_disconnect():
 
 @socketio.on("join_room")
 def handle_join_room(room_id: int, username: str):
+    # TODO when user joins different room, remove from old room
+    # TODO room 1 bug doesn't display left members
     # Add the user to the room in the database (if needed)
     # Example: UserRoom.create(user_id=user_id, room_id=room_id)
 
@@ -46,8 +48,6 @@ def handle_join_room(room_id: int, username: str):
         active_users_by_room[room_id] = set()
     active_users_by_room[room_id].add(username)
 
-    print(active_users_by_room)
-    print(sid_to_user)
     # Emit "active_users" event to all users in the same room
     emit("active_users", {"users": list(active_users_by_room[room_id])}, to=room_id)
 
@@ -80,9 +80,11 @@ def handle_user_join(filename: str):
     pass
 
 def next_song():
-    #emit("currently_playing", {"track": currently_playing, "progress": progress}, room=request.sid)
+    # emit("currently_playing", {"track": currently_playing, "progress": progress}, room=request.sid)
     pass
 
+def update_queue(username, room_id):
+    emit("song_queue", {"queue": get_queue(room_id)}, room=room_id)
 
     """
 
