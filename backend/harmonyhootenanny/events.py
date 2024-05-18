@@ -6,63 +6,90 @@ from flask_socketio import emit, join_room, leave_room
 from flask import request
 
 # Initialize an empty dictionary to store active users in each room
-active_users_by_room = {}
-sid_to_user = {}
-song_schedulers: dict[int, SongScheduler] = {}
+active_users_by_room = {}  # {room_id: {username1, username2, ...}}
+sid_to_user = {}  # {socket_id: username}
+song_schedulers: dict[int, SongScheduler] = {}  # {room_id: SongScheduler instance}
 
 @socketio.on("connect")
 def handle_connect():
-    print("client connected")
+    """
+    Handles client connection.
 
+    This function is called when a client connects to the Socket.IO server.
+    """
+    print("Client connected")
 
 @socketio.on("disconnect")
 def handle_disconnect():
-    print("client disconnected")
+    """
+    Handles client disconnection.
+
+    This function is called when a client disconnects from the Socket.IO server.
+    """
+    print("Client disconnected")
     room_id = 0
     print(active_users_by_room, sid_to_user)
     username_left = sid_to_user[request.sid]
-    for key, menge in active_users_by_room.items():
-        for username in menge:
-            if username_left == username:
-                room_id = key 
-    active_users_by_room[key].remove(username_left)
+
+    # Find the room ID where the user was active
+    for key, users_set in active_users_by_room.items():
+        if username_left in users_set:
+            room_id = key
+            break
+
+    # Remove the user from the active users set and delete their socket ID
+    active_users_by_room[room_id].remove(username_left)
     del sid_to_user[request.sid]
 
     print(active_users_by_room, sid_to_user)
 
-    leave_room(key, request.sid)
+    # Leave the room and handle song playback
+    leave_room(room_id, request.sid)
     handle_play_song(room_id)
 
-    emit("active_users", {"users":list(active_users_by_room[room_id])}, room=key)
+    # Emit updated active users list to the room
+    emit("active_users", {"users": list(active_users_by_room[room_id])}, room=room_id)
     print("Emitted active users and played song")
 
 
 @socketio.on("join_room")
 def handle_join_room(room_id: int, username: str):
-    # TODO when user joins different room, remove from old room
-    # TODO room 1 bug doesn't display left members
+    """
+    Handles a user joining a room.
 
+    Args:
+        room_id (int): The unique identifier for the room.
+        username (str): The username of the joining user.
+
+    Notes:
+        - Creates a SongScheduler instance for the room if it doesn't exist.
+        - Adds the user to the active users list for the room.
+        - Associates the user's socket ID with their username.
+        - Joins the user to the WebSocket room.
+        - Emits "song_queue" and "currently_playing" events to the new user.
+        - Emits an "active_users" event to all users in the same room.
+    """
+    # Create a SongScheduler instance for the room if it doesn't exist
     if room_id not in song_schedulers.keys():
-        # Song Scheduler creation
         song_schedulers[room_id] = SongScheduler(room_id, socketio)
         song_schedulers[room_id].start_thread()
-        # create list of active users
-        active_users_by_room[room_id] = set()      
 
     # Add the user's request.sid to the active users list for the room
     active_users_by_room[room_id].add(username)
-    # Create a link between sid's and usernames
+
+    # Associate the user's socket ID with their username
     sid_to_user[request.sid] = username
 
-    # Add user to websocket room
-    join_room(room_id, request.sid)     
+    # Join the user to the WebSocket room
+    join_room(room_id, request.sid)
 
     # Emit "song_queue" and "currently_playing" events to the new user
     emit("song_queue", {"queue": song_schedulers[room_id].get_queue()}, room=request.sid)
     emit("currently_playing", song_schedulers[room_id].get_current_song(), room=request.sid)
 
-    # Emit "active_users" event to all users in the same room
-    emit("active_users", {"users":list(active_users_by_room[room_id])}, room=room_id)
+    # Emit an "active_users" event to all users in the same room
+    emit("active_users", {"users": list(active_users_by_room[room_id])}, room=room_id)
+
 
 
 @socketio.on("skip_song")
