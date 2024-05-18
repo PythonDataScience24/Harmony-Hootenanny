@@ -81,10 +81,10 @@ class SongScheduler:
     """
     def __init__(self, room_id: int, socketio) -> None:
         example_queue = [
-                            _Song("Hypnotized.mp3", "Hypnotized", "Someone1", 195),
-                            _Song("Men At Work - Down Under (Official HD Video).mp3", "Down Under", "Men At Work", 220),
-                            _Song("Bob Marley - One Love.mp3","One Love", "Bob MArley", 164)
-                        ]
+            _Song("Hypnotized.mp3", "Hypnotized", "Someone1", 195),
+            _Song("Men At Work - Down Under (Official HD Video).mp3", "Down Under", "Men At Work", 220),
+            _Song("Bob Marley - One Love.mp3","One Love", "Bob MArley", 164)
+            ]
         self.room_id = room_id
         self.socketio = socketio
         self.check_interval = 1
