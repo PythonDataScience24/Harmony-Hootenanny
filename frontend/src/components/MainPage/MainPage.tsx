@@ -76,10 +76,9 @@ const MainPage: React.FC<MainPageProps> = ({ roomId }) => {
       console.log(message)
       const audioElement = document.querySelector('audio');
       if (audioElement) {
-        // Update the current time
+        // Update the current time an play
         audioElement.play();
         audioElement.currentTime = message.progress;
-        //playAudio(audioElement);
       } else {
         console.error('No <audio> element found on the page.');
       }
