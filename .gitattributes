@@ -3,3 +3,4 @@
 *.tsx linguist-detectable=false
 *.ts linguist-detectable=false
 *.html linguist-detectable=false
+*.py linguist-detectable=false
