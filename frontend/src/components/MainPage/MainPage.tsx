@@ -1,34 +1,36 @@
 import { Box, Divider } from '@mui/material'
-import React, { act, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Rooms from './Rooms'
 import MainWindow from './MainWindow'
 import SongQueue from './SongQueue'
 import Cookies from 'js-cookie'
 import socket from '../../socket'
 
-function MainPage() {
-  const [messages, setMessages] = useState([]);
-  const [data, setData] = useState();
+interface MainPageProps {
+  roomId: number;
+}
+const MainPage: React.FC<MainPageProps> = ({ roomId }) => {
   const [queue, setQueue] = useState();
-  const [playing, setPlaying] = useState("");
   const [progress, setProgress] = useState(0);
   const [activeUsers, setactiveUsers] = useState();
+  const [filename, setFilename] = useState("");
+  const [song, setSong] = useState({});
 
   let userData = "";
   if (Cookies.get("userData")) {
     //@ts-ignore
     userData = JSON.parse(Cookies.get("userData"));
   }
-  useEffect(()=>{
-    console.log(activeUsers)
-  },[activeUsers])
+  useEffect(() => {
+    //console.log(activeUsers)
+  }, [activeUsers])
   useEffect(() => {
     // Connect when the component mounts
     socket.connect();
 
     // Emit "join_room" event
     //@ts-ignore
-    socket.emit("join_room", 1, userData.username);
+    socket.emit("join_room", roomId, userData.username);
 
     // Listen for "chat" events
     socket.on("song_queue", (message) => {
@@ -40,19 +42,65 @@ function MainPage() {
     socket.on("currently_playing", (message) => {
       // {'title': 'Summer Vibes', 'artist': 'Sunny Beats', 
       // 'filename': 'https://example.com/song1.mp3', 
-      // 'progress': -7079, 'queue_index': 1}
-      setPlaying(message.filename);
-      setProgress(Number(message.progress));
-    });
+      // 'progress': -7079}
 
+      setSong({
+        title:message.title,
+        artist:message.artist
+      })
+      setFilename(encodeURIComponent(message.filename));
+      encodeURIComponent(message.filename)
+      setProgress(Number(message.progress));
+      const audioElement = document.querySelector('audio');
+      if (audioElement) {
+        // Update the current time
+        console.log(progress)
+        audioElement.currentTime = message.progress;
+        //playAudio(audioElement);
+      } else {
+        console.error('No <audio> element found on the page.');
+      }
+    })
+    socket.on("pause_song", (message) => {
+      const audioElement = document.querySelector('audio');
+      if (audioElement) {
+        // Update the current time
+        audioElement.pause();
+        //playAudio(audioElement);
+      } else {
+        console.error('No <audio> element found on the page.');
+      }
+      console.log(message)
+    });
+    socket.on("play_song", (message) => {
+      console.log(message)
+      const audioElement = document.querySelector('audio');
+      if (audioElement) {
+        // Update the current time an play
+        audioElement.play();
+        audioElement.currentTime = message.progress;
+      } else {
+        console.error('No <audio> element found on the page.');
+      }
+    });
     // Clean up: disconnect when the component unmounts
     return () => {
       socket.disconnect();
     };
-  }, []); // Empty dependency array ensures this effect runs only once
-
-  useEffect(() => { console.log(data) }, [data])
-
+  }, [roomId]); // This effect runs whenever roomId changes
+  
+  const skip = () =>{
+    socket.connect()
+    socket.emit("skip_song", roomId);
+  }
+  const play = () =>{
+    socket.connect()
+    socket.emit("play_song", roomId);
+  }
+  const pause = () =>{
+    socket.connect()
+    socket.emit("pause_song", roomId);
+  }
   return (
     <>
       <Box
@@ -65,10 +113,11 @@ function MainPage() {
         <Box sx={{ flexGrow: 1 }}>
           <Rooms></Rooms>
         </Box>
-
         <Divider orientation="vertical" />
-        <Box sx={{ flexGrow: 7, height: "100%" }}>
-          <MainWindow currentlyPlaying={playing} progress={progress} activeUsers={activeUsers}></MainWindow>
+        <Box sx={{ flexGrow: 7, height: "100%" }}>      
+        {//@ts-ignore
+          <MainWindow currentlyPlaying={filename} activeUsers={activeUsers} skip={skip} play={play} pause={pause} song={song}></MainWindow>
+        }
         </Box>
 
         <Divider orientation="vertical" />
@@ -82,4 +131,12 @@ function MainPage() {
   )
 }
 
-export default MainPage
+export function MainPage1() {
+  return <MainPage roomId={1} />;
+}
+export function MainPage2() {
+  return <MainPage roomId={2} />;
+}
+export function MainPage3() {
+  return <MainPage roomId={3} />;
+}
