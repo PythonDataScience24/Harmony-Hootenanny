@@ -66,7 +66,19 @@ def set_username(username) -> None:
 
 def add_song_to_db(title:str, artist:str, duration:int, fileName:str):
     """
-    Add a song to the database
+    Add a song to the database.
+
+    Args:
+        title (str): Song title.
+        artist (str): Song artist.
+        duration (int): Song duration in seconds.
+        fileName (str): Song file name.
+
+    Returns:
+        None
+
+    Raises:
+        sqlite3.Error: Database interaction error.
     """
     try:
         with get_db_connection() as conn:
@@ -80,7 +92,18 @@ def add_song_to_db(title:str, artist:str, duration:int, fileName:str):
 
 def add_song_to_queue(songId:int, roomId:int, userId:int):
     """
-    Add a song to the queue
+    Add a song to the queue.
+
+    Args:
+        songId (int): Song ID.
+        roomId (int): Room ID.
+        userId (int): User ID.
+
+    Returns:
+        None
+
+    Raises:
+        sqlite3.Error: Database interaction error.
     """
     try:
         with get_db_connection() as conn:
@@ -94,7 +117,16 @@ def add_song_to_queue(songId:int, roomId:int, userId:int):
 
 def remove_song_from_queue(queueIndex:int):
     """
-    Remove a song from the queue
+    Remove a song from the queue.
+
+    Args:
+        queueIndex (int): Queue index of the song.
+
+    Returns:
+        None
+
+    Raises:
+        sqlite3.Error: Database interaction error.
     """
     try:
         with get_db_connection() as conn:
@@ -107,7 +139,16 @@ def remove_song_from_queue(queueIndex:int):
 
 def get_queue(roomId:int):
     """
-    Get the song queue of a specified room
+    Get the song queue for a room.
+
+    Args:
+        roomId (int): Room ID.
+
+    Returns:
+        list of dict: List of songs with title, artist, and duration.
+
+    Raises:
+        sqlite3.Error: Database interaction error.
     """
     try:
         with get_db_connection() as conn:
@@ -125,6 +166,18 @@ def get_queue(roomId:int):
         print(f"SQLite error name: {e.sqlite_errorname}")
 
 def get_current_song(roomId:int) -> dict:
+    """
+    Get the currently playing song in a room.
+
+    Args:
+        roomId (int): Room ID.
+
+    Returns:
+        dict: Currently playing song details including title, artist, filename, progress, and queue index.
+
+    Raises:
+        sqlite3.Error: Database interaction error.
+    """
     try:
         with get_db_connection() as conn:
             result = conn.cursor().execute('SELECT \
@@ -151,9 +204,19 @@ def get_current_song(roomId:int) -> dict:
     except sqlite3.Error as e:
         print(f"SQLite error code: {e.sqlite_errorcode}")
         print(f"SQLite error name: {e.sqlite_errorname}")
+
 def get_song(songId:int):
     """
-    Get specified song from id
+    Get a song by ID.
+
+    Args:
+        songId (int): Song ID.
+
+    Returns:
+        dict: Song details including title, artist, source, and duration.
+
+    Raises:
+        sqlite3.Error: Database interaction error.
     """
     try:
         with get_db_connection() as conn:
@@ -177,6 +240,10 @@ def get_song(songId:int):
 
 if __name__ == "__main__":
     """
-    use for developing or setting up the database.
+    Main entry point for developing or setting up the database.
+    Uncomment the init_db() call to initialize the database schema.
+
+    Usage:
+        Run this script directly to initialize the database or perform setup tasks.
     """
-    # init_db() # if no database.db file exists or schema.sql was updated
+    # init_db()  # Uncomment to initialize the database if no database.db file exists or if schema.sql was updated

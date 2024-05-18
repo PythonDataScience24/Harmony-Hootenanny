@@ -94,15 +94,42 @@ def handle_join_room(room_id: int, username: str):
 
 @socketio.on("skip_song")
 def handle_skip_song(room_id: int):
+    """
+    Handle "skip_song" event to skip the current song for all users in the specified room.
+
+    Args:
+        room_id (int): Room ID.
+
+    Returns:
+        None
+    """
     song_schedulers[room_id].skip()
 
 @socketio.on("pause_song")
 def handle_pause_song(room_id: int):
+    """
+    Handle "pause_song" event to pause the current song for all users in the specified room.
+
+    Args:
+        room_id (int): Room ID.
+
+    Returns:
+        None
+    """
     song_schedulers[room_id].pause()
     emit("pause_song","paused", room=room_id)
 
 @socketio.on("play_song")
 def handle_play_song(room_id: int):
+    """
+    Handle "play_song" event to play the current song for all users in the specified room.
+
+    Args:
+        room_id (int): Room ID.
+
+    Returns:
+        None
+    """
     progress = song_schedulers[room_id].play()
     emit("play_song", {"progress":progress} ,room=room_id)
 
