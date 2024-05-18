@@ -151,7 +151,29 @@ def get_current_song(roomId:int) -> dict:
     except sqlite3.Error as e:
         print(f"SQLite error code: {e.sqlite_errorcode}")
         print(f"SQLite error name: {e.sqlite_errorname}")
-
+def get_song(songId:int):
+    """
+    Get specified song from id
+    """
+    try:
+        with get_db_connection() as conn:
+            cursor = conn.cursor().execute("SELECT title, artist, src, duration FROM songs WHERE song_id = ?",(songId,))
+            row = cursor.fetchone()
+            if row:
+                # Convert the results into the desired format
+                song = {
+                    "title": row[0], 
+                    "artist": row[1], 
+                    "src": row[2], 
+                    "duration": row[3]
+                }
+                # print("Song successfully selected")
+                return song
+            else:
+                return print("SongID not found in database")
+    except sqlite3.Error as e:
+        print(f"SQLite error code: {e.sqlite_errorcode}")
+        print(f"SQLite error name: {e.sqlite_errorname}")
 
 if __name__ == "__main__":
     """

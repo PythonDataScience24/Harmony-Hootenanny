@@ -38,7 +38,7 @@ function SongQueue({ queue }: { queue: [JSON] }) {
                       <Box>Artist: {song.artist}</Box>
                     }
                     {//@ts-ignore
-                      <Box>Duration: {song.duration}</Box>
+                      <Box>Duration: {Math.floor(song.duration / 60)}:{song.duration - Math.floor(song.duration / 60) * 60}</Box>
                     }
                   </Box>
                 </Paper>
