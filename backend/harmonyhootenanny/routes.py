@@ -262,14 +262,16 @@ def search_songs():
 @main.route('/api/download/youtube', methods=['POST'])
 def download_youtube():
     """
-    Download a YouTube video as an MP3.
+    Download a YouTube video as an MP3 and add it to the queue.
 
     This endpoint allows users to download the audio of a YouTube video as an MP3 file.
-    The YouTube link is provided in the request body.
+    The YouTube link, room ID, and user ID are provided in the request body.
 
     Request JSON format:
     {
-        "youtube_link": "string"
+        "youtube_link": "string",
+        "roomId": "int",
+        "userId": "int"
     }
 
     Responses:
@@ -290,17 +292,22 @@ def download_youtube():
     Returns:
         Response object with a JSON message and appropriate HTTP status code.
     """
-    youtube_link = request.json.get('youtube_link')
-    print(f"Received YouTube link: {youtube_link}")  # Ausgabe des Links in der Konsole
+    data = request.json
+    youtube_link = data.get('youtube_link')
+    roomId = data.get('roomId')
+    userId = data.get('userId')
+
     if not youtube_link:
         return jsonify({'error': 'No YouTube link provided'}), 400
 
     # Initialize the YoutubeDownloader
     youtube_downloader = YoutubeDownloader()
-    mp3_path = youtube_downloader.download_video(youtube_link)
-    if mp3_path[1]==200:
-        return jsonify({'message': 'Video downloaded successfully', 'mp3_path': mp3_path}), 200
-    return jsonify({'error': 'Failed to download video'}), 500
+    title, status_code = youtube_downloader.download_video(youtube_link, roomId, userId)
+
+    if status_code == 200:
+        return jsonify({'message': 'Video downloaded successfully', 'title': title}), 200
+    return jsonify({'error': 'Failed to download video'}), status_code
+
 
 def create_rooms():
     """Create predefined rooms in the database if they don't exist."""
