@@ -25,3 +25,10 @@ CREATE TABLE IF NOT EXISTS queues (
   room_id INTEGER REFERENCES rooms (room_id),
   user_id INTEGER REFERENCES users (user_id)
 );
+CREATE TABLE IF NOT EXISTS user_actions (
+  action_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  action_type TEXT,
+  action_timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+  room_id INTEGER REFERENCES rooms (room_id),
+  user_id INTEGER REFERENCES users (user_id)
+);

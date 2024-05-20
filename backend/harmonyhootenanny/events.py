@@ -1,6 +1,6 @@
 
 from harmonyhootenanny.modules.SongScheduler import SongScheduler
-from database import get_current_song, get_queue
+from database import add_user_action, get_current_song, get_queue
 from .extensions import socketio
 from flask_socketio import emit, join_room, leave_room
 from flask import request
@@ -36,6 +36,10 @@ def handle_disconnect():
         if username_left in users_set:
             room_id = key
             break
+
+    # Add user action to database
+    username = sid_to_user[request.sid]
+    add_user_action('leave_room', room_id, username)
 
     # Remove the user from the active users set and delete their socket ID
     active_users_by_room[room_id].remove(username_left)
@@ -85,6 +89,9 @@ def handle_join_room(room_id: int, username: str):
     # Join the user to the WebSocket room
     join_room(room_id, request.sid)
 
+    # Add user action to database
+    add_user_action('join_room', room_id, username)
+
     # Emit "song_queue" and "currently_playing" events to the new user
     emit("song_queue", {"queue": song_schedulers[room_id].get_queue()}, room=request.sid)
     emit("currently_playing", song_schedulers[room_id].get_current_song(), room=request.sid)
@@ -95,7 +102,7 @@ def handle_join_room(room_id: int, username: str):
 
 
 @socketio.on("skip_song")
-def handle_skip_song(room_id: int):
+def handle_skip_song(room_id: int, username: str):
     """
     Handle "skip_song" event to skip the current song for all users in the specified room.
 
@@ -106,6 +113,9 @@ def handle_skip_song(room_id: int):
         None
     """
     song_schedulers[room_id].skip()
+    
+    # Add user action to database
+    add_user_action('skip_song', room_id, username)
 
 @socketio.on("pause_song")
 def handle_pause_song(room_id: int):

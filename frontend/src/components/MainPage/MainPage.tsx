@@ -88,19 +88,20 @@ const MainPage: React.FC<MainPageProps> = ({ roomId }) => {
       socket.disconnect();
     };
   }, [roomId]); // This effect runs whenever roomId changes
-  
-  const skip = () =>{
-    socket.connect()
-    socket.emit("skip_song", roomId);
-  }
-  const play = () =>{
-    socket.connect()
+
+  const skip = () => {
+    socket.connect();
+    //@ts-ignore
+    socket.emit("skip_song", roomId, userData.username);
+  };
+  const play = () => {
+    socket.connect();
     socket.emit("play_song", roomId);
-  }
-  const pause = () =>{
-    socket.connect()
+  };
+  const pause = () => {
+    socket.connect();
     socket.emit("pause_song", roomId);
-  }
+  };
   return (
     <>
       <Box
