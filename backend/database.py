@@ -238,6 +238,43 @@ def get_song(songId:int):
         print(f"SQLite error code: {e.sqlite_errorcode}")
         print(f"SQLite error name: {e.sqlite_errorname}")
 
+def add_user_action(action_type: str, room_id: int, username: str):
+    """
+    Add a user action to the user_actions table.
+
+    Args:
+        action_type (str): Type of user action (e.g., 'join_room', 'leave_room', etc.).
+        room_id (int): ID of the room associated with the action.
+        username (str): Username of the user performing the action.
+
+    Returns:
+        None
+
+    Raises:
+        sqlite3.Error: Database interaction error.
+    """
+    try:
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT user_id FROM users WHERE username = ?", (username,))
+            user_id = cursor.fetchone()
+            
+            if user_id is None:
+                print(f"User with username '{username}' not found")
+                return
+            
+            user_id = user_id[0]  # Extract user_id from the fetched tuple
+
+            cursor.execute(
+                "INSERT INTO user_actions (action_type, room_id, user_id) VALUES (?, ?, ?)",
+                (action_type, room_id, user_id)
+            )
+            conn.commit()
+            print("User action successfully added to database")
+    except sqlite3.Error as e:
+        print(f"SQLite error code: {e.sqlite_errorcode}")
+        print(f"SQLite error name: {e.sqlite_errorname}")
+
 if __name__ == "__main__":
     """
     Main entry point for developing or setting up the database.
