@@ -65,22 +65,31 @@ const AutoCompleteComponent = ({ onSongSelect }: {onSongSelect: any}) => {
 
   const handleKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      try {
-        const response = await fetch('http://localhost:5000/api/download/youtube', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ youtube_link: value })
-        });
-        setValue("");
-        const data = await response.json();
-        console.log(data);
-      } catch (error) {
-        console.error('Error submitting to backend:', error);
-      }
+        // Überprüfen, ob der Wert ein gültiger YouTube-Link ist
+        const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
+        
+        if (youtubeRegex.test(value)) {
+            try {
+                const response = await fetch('http://localhost:5000/api/download/youtube', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ youtube_link: value })
+                });
+                setValue("");
+                const data = await response.json();
+                console.log(data);
+            } catch (error) {
+                console.error('Error submitting to backend:', error);
+            }
+        } else { 
+            //TODO Make Endpoint for Title into Queue
+            console.error('Invalid YouTube link');
+        }
     }
-  };
+};
+
 
   const inputProps = {
     placeholder: "Search for a song or paste a YouTube link",
