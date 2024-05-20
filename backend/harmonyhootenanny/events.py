@@ -54,6 +54,7 @@ def handle_disconnect():
 
 @socketio.on("join_room")
 def handle_join_room(room_id: int, username: str):
+   
     """
     Handles a user joining a room.
 
@@ -73,6 +74,7 @@ def handle_join_room(room_id: int, username: str):
     if room_id not in song_schedulers.keys():
         song_schedulers[room_id] = SongScheduler(room_id, socketio)
         song_schedulers[room_id].start_thread()
+        active_users_by_room [room_id] = set()
 
     # Add the user's request.sid to the active users list for the room
     active_users_by_room[room_id].add(username)
