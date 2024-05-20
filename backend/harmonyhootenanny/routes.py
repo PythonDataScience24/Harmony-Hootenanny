@@ -1,5 +1,6 @@
 """handles Rest-API of our backend"""
 # Import necessary modules
+import json
 import os
 import sqlite3
 from flask import Blueprint, request, jsonify, send_from_directory
@@ -296,7 +297,8 @@ def download_youtube():
     youtube_link = data.get('youtube_link')
     roomId = data.get('roomId')
     userId = data.get('userId')
-
+    username = data.get('userData')["username"]
+    
     if not youtube_link:
         return jsonify({'error': 'No YouTube link provided'}), 400
 

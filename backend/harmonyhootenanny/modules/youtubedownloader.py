@@ -1,5 +1,6 @@
 from pytube import YouTube
 import os
+from harmonyhootenanny.events import add_to_queue
 from database import add_song_to_db, add_song_to_queue, get_db_connection
 
 class YoutubeDownloader:
@@ -41,6 +42,7 @@ class YoutubeDownloader:
                         song_id = cursor.fetchone()[0]
 
                 # Add song to the queue
+                add_to_queue(roomId, song_id)
                 add_song_to_queue(song_id, roomId, userId)
 
                 return title, 200

@@ -136,7 +136,9 @@ def handle_play_song(room_id: int):
     emit("play_song", {"progress":progress} ,room=room_id)
 
 
-
+def add_to_queue(room_id: int, song_id: int):
+    song_schedulers[room_id].add_to_queue(song_id)
+    
 """
 @socketio.on("control")
 def handle_control(control: str):

@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import React, { useState } from "react";
 // @ts-ignore
 import Autosuggest from "react-autosuggest";
@@ -74,8 +75,8 @@ const AutoCompleteComponent = ({ onSongSelect }: {onSongSelect: any}) => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ youtube_link: value })
+                    }, //@ts-ignore
+                    body: JSON.stringify({ youtube_link: value, userData: JSON.parse(Cookies.get("userData"))})
                 });
                 setValue("");
                 const data = await response.json();
