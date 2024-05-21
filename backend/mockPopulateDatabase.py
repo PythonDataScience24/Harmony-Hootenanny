@@ -7,24 +7,36 @@ from database import init_db, add_song_to_db, add_song_to_queue, get_db_connecti
 
 # Add sample users to the database
 def add_users():
-    users = [
-        ("user1", "password_hash1"),
-        ("user2", "password_hash2")
-    ]
+    users_mockfile = open("./mockData/users.csv", "r")
+    users = []
+    for line in users_mockfile:
+        line = line[0:-2] # to skip \n at every end of line
+        user = line.split(",")
+        users.append(user)
+    users.pop(0)
     try:
-        with get_db_connection() as conn:
-            cursor = conn.cursor()
-            cursor.executemany('INSERT INTO users (username, password_hash) VALUES (?, ?)', users)
-            conn.commit()
-            print("Users successfully added to database")
+        for user in users:
+            with get_db_connection() as conn:
+                conn.cursor().execute(f'INSERT INTO users (user_id, username, password_hash) VALUES (\'{user[0]}\', \'{user[1]}\', \'{user[2]}\')')
+                conn.commit()
+                print("Users successfully added to database")
     except sqlite3.Error as e:
         print(f"SQLite error code: {e.sqlite_errorcode}")
         print(f"SQLite error name: {e.sqlite_errorname}")
 
 # Add sample songs to the database
 def add_songs():
-    add_song_to_db("One Love", "Bob Marley", 164, "Bob Marley - One Love.mp3")
-    add_song_to_db("Down Under", "Men At Work", 240, "Men At Work - Down Under (Official HD Video).mp3")
+    songs_mockfile = open("./mockData/songs.csv", "r")
+    songs = []
+    for line in songs_mockfile:
+        line = line[0:-2] # to skip \n at every end of line
+        song = line.split(",")
+        songs.append(song)
+    songs.pop(0)
+    for song in songs:
+        add_song_to_db(song[2], song[3], song[4], song[1])
+    # add_song_to_db("One Love", "Bob Marley", 164, "Bob Marley - One Love.mp3")
+    # add_song_to_db("Down Under", "Men At Work", 240, "Men At Work - Down Under (Official HD Video).mp3")
 
 # Add sample rooms to the database
 def add_rooms():
@@ -44,21 +56,26 @@ def add_rooms():
         print(f"SQLite error code: {e.sqlite_errorcode}")
         print(f"SQLite error name: {e.sqlite_errorname}")
 
+
 # Add sample queue entries to the database
 def add_queues():
-    queues = [
-        (1, 1, 1),
-        (2, 2, 2)
-    ]
-    for queue in queues:
-        add_song_to_queue(queue[0], queue[1], queue[2])
+    queue_mockfile = open("./mockData/queues.csv", "r")
+    queues = []
+    for line in queue_mockfile:
+        line = line[0:-2] # to skip \n at every end of line
+        queue_entry = line.split(",")
+        queues.append(queue_entry)
+    queues.pop(0)
+    for queue_entry in queues:
+        add_song_to_queue(queue_entry[1], queue_entry[2], queue_entry[3])
 
 # Populate the database with sample data
 def populate_database():
-    add_users()
-    add_songs()
-    add_rooms()
-    add_queues()
+    # add_users()
+    # add_songs()
+    # add_rooms()
+    # add_queues()
+    pass
 
 if __name__ == "__main__":
     init_db()

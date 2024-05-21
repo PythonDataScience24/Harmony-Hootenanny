@@ -1,0 +1,50 @@
+song_id,src,title,artist,duration
+1,"https://example.com/song1.mp3","Bohemian Rhapsody","Queen",354
+2,"https://example.com/song2.mp3","Hotel California","Eagles",307
+3,"https://example.com/song3.mp3","Imagine","John Lennon",183
+4,"https://example.com/song4.mp3","Like a Rolling Stone","Bob Dylan",365
+5,"https://example.com/song5.mp3","Stairway to Heaven","Led Zeppelin",482
+6,"https://example.com/song6.mp3","Billie Jean","Michael Jackson",294
+7,"https://example.com/song7.mp3","Smells Like Teen Spirit","Nirvana",301
+8,"https://example.com/song8.mp3","Hey Jude","The Beatles",431
+9,"https://example.com/song9.mp3","Purple Haze","Jimi Hendrix",174
+10,"https://example.com/song10.mp3","Sweet Child o' Mine","Guns N' Roses",355
+11,"https://example.com/song11.mp3","Boogie Wonderland","Earth, Wind & Fire",250
+12,"https://example.com/song12.mp3","Wonderwall","Oasis",258
+13,"https://example.com/song13.mp3","Livin' on a Prayer","Bon Jovi",244
+14,"https://example.com/song14.mp3","Thriller","Michael Jackson",357
+15,"https://example.com/song15.mp3","Wish You Were Here","Pink Floyd",334
+16,"https://example.com/song16.mp3","Let It Be","The Beatles",243
+17,"https://example.com/song17.mp3","Sweet Home Alabama","Lynyrd Skynyrd",293
+18,"https://example.com/song18.mp3","Boys Don't Cry","The Cure",177
+19,"https://example.com/song19.mp3","With or Without You","U2",296
+20,"https://example.com/song20.mp3","Every Breath You Take","The Police",243
+21,"https://example.com/song21.mp3","Boogie Shoes","KC and the Sunshine Band",197
+22,"https://example.com/song22.mp3","Dancing Queen","ABBA",228
+23,"https://example.com/song23.mp3","Sweet Caroline","Neil Diamond",203
+24,"https://example.com/song24.mp3","Stayin' Alive","Bee Gees",293
+25,"https://example.com/song25.mp3","Eye of the Tiger","Survivor",245
+26,"https://example.com/song26.mp3","I Will Survive","Gloria Gaynor",198
+27,"https://example.com/song27.mp3","Superstition","Stevie Wonder",269
+28,"https://example.com/song28.mp3","Livin' La Vida Loca","Ricky Martin",240
+29,"https://example.com/song29.mp3","Smooth","Santana ft. Rob Thomas",276
+30,"https://example.com/song30.mp3","I Want to Hold Your Hand","The Beatles",150
+31,"https://example.com/song31.mp3","Radio Ga Ga","Queen",354
+32,"https://example.com/song32.mp3","Everyday People","Sly & The Family Stone",174
+33,"https://example.com/song33.mp3","Sweet Dreams (Are Made of This)","Eurythmics",216
+34,"https://example.com/song34.mp3","Don't Stop Believin'","Journey",250
+35,"https://example.com/song35.mp3","I Want You Back","The Jackson 5",179
+36,"https://example.com/song36.mp3","Take on Me","a-ha",227
+37,"https://example.com/song37.mp3","Billie's Bounce","Charlie Parker",210
+38,"https://example.com/song38.mp3","Purple Rain","Prince",480
+39,"https://example.com/song39.mp3","Black Dog","Led Zeppelin",296
+40,"https://example.com/song40.mp3","My Girl","The Temptations",165
+41,"https://example.com/song41.mp3","Sweet Child o' Mine","Guns N' Roses",355
+42,"https://example.com/song42.mp3","I Heard It Through the Grapevine","Marvin Gaye",207
+43,"https://example.com/song43.mp3","Hotel California","Eagles",307
+44,"https://example.com/song50.mp3","Let It Be","The Beatles",243
+45,"https://example.com/song45.mp3","Like a Rolling Stone","Bob Dylan",365
+46,"https://example.com/song46.mp3","Wish You Were Here","Pink Floyd",334
+47,"https://example.com/song47.mp3","With or Without You","U2",296
+48,"https://example.com/song48.mp3","Every Breath You Take","The Police",243
+49,"https://example.com/song50.mp3","Let It Be","The Beatles",243

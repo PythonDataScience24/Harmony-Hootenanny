@@ -1,6 +1,6 @@
 
 from harmonyhootenanny.modules.SongScheduler import SongScheduler
-from database import get_current_song, get_queue
+from database import add_user_action, get_current_song, get_queue
 from .extensions import socketio
 from flask_socketio import emit, join_room, leave_room
 from flask import request
@@ -37,6 +37,10 @@ def handle_disconnect():
             room_id = key
             break
 
+    # Add user action to database
+    username = sid_to_user[request.sid]
+    add_user_action('leave_room', room_id, username)
+
     # Remove the user from the active users set and delete their socket ID
     active_users_by_room[room_id].remove(username_left)
     del sid_to_user[request.sid]
@@ -54,6 +58,7 @@ def handle_disconnect():
 
 @socketio.on("join_room")
 def handle_join_room(room_id: int, username: str):
+   
     """
     Handles a user joining a room.
 
@@ -73,6 +78,7 @@ def handle_join_room(room_id: int, username: str):
     if room_id not in song_schedulers.keys():
         song_schedulers[room_id] = SongScheduler(room_id, socketio)
         song_schedulers[room_id].start_thread()
+        active_users_by_room [room_id] = set()
 
     # Add the user's request.sid to the active users list for the room
     active_users_by_room[room_id].add(username)
@@ -82,6 +88,9 @@ def handle_join_room(room_id: int, username: str):
 
     # Join the user to the WebSocket room
     join_room(room_id, request.sid)
+
+    # Add user action to database
+    add_user_action('join_room', room_id, username)
 
     # Emit "song_queue" and "currently_playing" events to the new user
     emit("song_queue", {"queue": song_schedulers[room_id].get_queue()}, room=request.sid)
@@ -93,7 +102,7 @@ def handle_join_room(room_id: int, username: str):
 
 
 @socketio.on("skip_song")
-def handle_skip_song(room_id: int):
+def handle_skip_song(room_id: int, username: str):
     """
     Handle "skip_song" event to skip the current song for all users in the specified room.
 
@@ -104,6 +113,9 @@ def handle_skip_song(room_id: int):
         None
     """
     song_schedulers[room_id].skip()
+    
+    # Add user action to database
+    add_user_action('skip_song', room_id, username)
 
 @socketio.on("pause_song")
 def handle_pause_song(room_id: int):
@@ -134,7 +146,9 @@ def handle_play_song(room_id: int):
     emit("play_song", {"progress":progress} ,room=room_id)
 
 
-
+def add_to_queue(room_id: int, song_id: int):
+    song_schedulers[room_id].add_to_queue(song_id)
+    
 """
 @socketio.on("control")
 def handle_control(control: str):
