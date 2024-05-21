@@ -32,7 +32,7 @@ const theme = {
   },
 };
 
-const AutoCompleteComponent = ({ onSongSelect }: {onSongSelect: any}) => {
+const AutoCompleteComponent = ({ onSongSelect }: { onSongSelect: any }) => {
   const [value, setValue] = useState("");
   const [suggestions, setSuggestions] = useState([]);
 
@@ -48,7 +48,7 @@ const AutoCompleteComponent = ({ onSongSelect }: {onSongSelect: any}) => {
       return [];
     }
   };
-// @ts-ignore
+  // @ts-ignore
   const onSuggestionsFetchRequested = async ({ value }) => {
     const suggestions = await getSuggestions(value);
     setSuggestions(suggestions);
@@ -58,38 +58,43 @@ const AutoCompleteComponent = ({ onSongSelect }: {onSongSelect: any}) => {
     setSuggestions([]);
   };
 
-// @ts-ignore
-  const onSuggestionSelected = (event, { suggestion }) => {
+  // @ts-ignore
+  const onSuggestionSelected = async (event, { suggestion }) => {
     console.log("Selected suggestion:", suggestion);
-    onSongSelect(suggestion.title); // Pass the selected title back to the parent component
+
+    try {
+      await fetch('http://localhost:5000/api/selected-song', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ selectedSong: suggestion.title })
+      });
+    } catch (error) {
+      console.error('Error sending selected song to backend:', error);
+    }
+    setValue("");
   };
+
 
   const handleKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-        // Überprüfen, ob der Wert ein gültiger YouTube-Link ist
-        const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
-        
-        if (youtubeRegex.test(value)) {
-            try {
-                const response = await fetch('http://localhost:5000/api/download/youtube', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }, //@ts-ignore
-                    body: JSON.stringify({ youtube_link: value, userData: JSON.parse(Cookies.get("userData"))})
-                });
-                setValue("");
-                const data = await response.json();
-                console.log(data);
-            } catch (error) {
-                console.error('Error submitting to backend:', error);
-            }
-        } else { 
-            //TODO Make Endpoint for Title into Queue
-            console.error('Invalid YouTube link');
-        }
+      try {
+        const response = await fetch('http://localhost:5000/api/download/youtube', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          //@ts-ignore
+          body: JSON.stringify({ searchvalue: value, userData: JSON.parse(Cookies.get("userData")) })
+        });
+        setValue("");
+        const data = await response.json();
+        console.log(data);
+      }
+      catch (error) {
+        console.error('Error submitting to backend:', error);
+      }
     }
-};
+  };
 
 
   const inputProps = {
