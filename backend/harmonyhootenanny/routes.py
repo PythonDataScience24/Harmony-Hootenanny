@@ -330,7 +330,7 @@ def create_rooms():
 create_rooms()
 
 @main.route('/api/dashboard', methods=['GET'])
-def dashboard():
+def get_dashboard():
     """
     Diese Methode stellt einen Endpunkt zur Verfügung, der Statistiken für jedes Room zurückgibt.
     Für jedes Zimmer werden folgende Statistiken zurückgegeben:
@@ -339,11 +339,12 @@ def dashboard():
     - most played song
     - top artist
     """
-    def get_stat(cursor, query, room_id):
-        cursor.execute(query, (room_id,))
-        return cursor.fetchone()[0]
-
     try:
+        def get_stat(cursor, query, room_id):
+            cursor.execute(query, (room_id,))
+            return cursor.fetchone()[0]
+
+    
         with get_db_connection() as db:
             cursor = db.cursor()
             room_data = {}
@@ -369,7 +370,7 @@ def dashboard():
                                 """, room_id)
                 }
 
-            return jsonify(room_data), 200
+        return jsonify(room_data), 200
         
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500

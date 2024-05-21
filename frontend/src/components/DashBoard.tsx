@@ -1,23 +1,37 @@
 import React, { useEffect, useState } from 'react';
 
 interface RoomData {
-    numberOfListeners: number;
-    totalPlayTime: number;
-    mostPlayedSong: string;
-    topArtist: string;
+    number_of_listeners: number;
+    total_play_time: number;
+    most_played_song: string;
+    top_artist: string;
 }
 
 const DashBoard = () => {
     const [data, setData] = useState<Record<string, RoomData> | null>(null);
 
     useEffect(() => {
-        fetch('/api/dashboard')
-            .then(response => response.json())
+        fetch('http://localhost:5000/api/dashboard', {
+            headers: {
+                'Accept': 'application/json',
+            }
+
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new TypeError("Oops, we haven't got JSON!");
+                }
+                return response.json();
+            })
             .then(data => {
-                console.log(data);
+                console.log('Data from server:', data);
                 setData(data);
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => console.error('Error:', error.message));
     }, []);
 
     if (!data) {
@@ -29,10 +43,10 @@ const DashBoard = () => {
             {Object.keys(data).map(room => (
                 <div key={room}>
                     <h2>{room}</h2>
-                    <p>Anzahl der Hörer: {data[room].numberOfListeners}</p>
-                    <p>Gesamtspielzeit: {data[room].totalPlayTime}</p>
-                    <p>Am häufigsten gespieltes Lied: {data[room].mostPlayedSong}</p>
-                    <p>Top-Künstler: {data[room].topArtist}</p>
+                    <p>Anzahl der Hörer: {data[room].number_of_listeners}</p>
+                    <p>Gesamtspielzeit: {data[room].total_play_time}</p>
+                    <p>Am häufigsten gespieltes Lied: {data[room].most_played_song}</p>
+                    <p>Top-Künstler: {data[room].top_artist}</p>
                 </div>
             ))}
         </div>
