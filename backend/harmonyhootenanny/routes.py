@@ -319,3 +319,58 @@ def create_rooms():
 
 # Call the function when the application starts
 create_rooms()
+
+# Endpoint to get the dashboard data
+@main.route('/dashboard', methods=['GET'])
+def dashboard():
+    """
+    Diese Methode stellt einen Endpunkt zur Verfügung, der Statistiken für jedes Room zurückgibt.
+    Für jedes Zimmer werden folgende Statistiken zurückgegeben:
+    - Anzahl der user
+    - total play time
+    - most played song
+    - top artist
+    """
+    try:
+        with get_db_connection() as db:
+            cursor = db.cursor()
+            room_data = {}
+            for room_id in [1, 2, 3]:
+                # Anzahl der user pro Raum
+                cursor.execute("Select number_of_listeners FROM rooms WHERE room_id=?", (room_id,))
+                number_of_listeners = cursor.fetchone()[0]
+                # Gesamtspielzeit pro Raum
+                cursor.execute("SELECT SUM(duration) FROM songs JOIN queues on songs.song_id = queues.song_id WHERE queues.room_id=?", (room_id,))
+                total_play_time = cursor.fetchone()[0]
+                # Most played song pro Raum
+                cursor.execute("""
+                               SELECT title, COUNT(*) as count
+                                FROM songs JOIN queues on songs.song_id = queues.song_id
+                                WHERE queues.room_id=?
+                                GROUP BY songs.song_id
+                                ORDER BY count DESC
+                                LIMIT 1
+                                """, (room_id,))
+                most_played_song = cursor.fetchone()[0]
+                # Top artist pro Raum
+                cursor.execute("""
+                               SELECT artist, COUNT(*) as count
+                                FROM songs JOIN queues on songs.song_id = queues.song_id
+                                WHERE queues.room_id=?
+                                GROUP BY artist
+                                ORDER BY count DESC
+                                LIMIT 1
+                                """, (room_id,))
+                top_artist = cursor.fetchone()[0]
+
+                room_data[f'room{room_id}'] = {
+                    'number_of_listeners': number_of_listeners,
+                    'total_play_time': total_play_time,
+                    'most_played_song': most_played_song,
+                    'top_artist': top_artist
+                }
+
+            return jsonify(room_data), 200
+        
+    except sqlite3.Error as e:
+        return jsonify({"error": f"Database error: {str(e)}"}), 500

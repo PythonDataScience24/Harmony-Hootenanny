@@ -10,6 +10,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { DARK_THEME } from "./colorthemes";
 import LoginLogoutButton from "./components/MainPage/LoginLogoutButton";
 import AuthForm from "./components/AuthForm/AuthForm";
+import DashBoard from "./components/DashBoard";
 
 export default function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -50,6 +51,7 @@ export default function App() {
             <Route path="/main/room3" element={<MainPage3 />} />
             <Route path="/test" element={<SecondPage />} />
             <Route path="/login" element={<AuthForm />} />
+            <Route path="/dashboard" element={<DashBoard />} />
           </Routes>
         </Box>
       </ThemeProvider>

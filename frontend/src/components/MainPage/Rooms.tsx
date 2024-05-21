@@ -27,6 +27,9 @@ function Rooms() {
         <Box sx={{border: '1px solid', borderColor: theme.palette.divider, borderRadius: 1, boxShadow: 1}}>
           <Button component={Link} to="/main/room3" style={roomStyle("/main/room3")}>Room3</Button>
         </Box>
+        <Box sx={{border: '1px solid', borderColor: theme.palette.divider, borderRadius: 1, boxShadow: 1}}>
+          <Button component={Link} to="/dashboard" style={roomStyle("/dashboard")}>Dashboard</Button>
+        </Box>
       </Stack>
     </Box>
   )
