@@ -2,6 +2,7 @@ import Cookies from "js-cookie";
 import React, { useState } from "react";
 // @ts-ignore
 import Autosuggest from "react-autosuggest";
+import { isGeneratorFunction } from "util/types";
 
 const theme = {
   input: {
@@ -65,10 +66,9 @@ const AutoCompleteComponent = ({ onSongSelect }: { onSongSelect: any }) => {
     try {
       await fetch('http://localhost:5000/api/selected-song', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ selectedSong: suggestion.title })
+        headers: {'Content-Type': 'application/json'},
+        //@ts-ignore
+        body: JSON.stringify({ selectedSong: suggestion.title, userData: JSON.parse(Cookies.get("userData")) })
       });
     } catch (error) {
       console.error('Error sending selected song to backend:', error);
