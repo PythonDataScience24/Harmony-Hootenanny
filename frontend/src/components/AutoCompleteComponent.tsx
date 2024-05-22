@@ -62,13 +62,16 @@ const AutoCompleteComponent = ({ onSongSelect }: { onSongSelect: any }) => {
   // @ts-ignore
   const onSuggestionSelected = async (event, { suggestion }) => {
     console.log("Selected suggestion:", suggestion);
-
+    const roomId = window.location.pathname.split('room').pop();
     try {
       await fetch('http://localhost:5000/api/selected-song', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        //@ts-ignore
-        body: JSON.stringify({ selectedSong: suggestion.title, userData: JSON.parse(Cookies.get("userData")), roomId: 1 })
+        body: JSON.stringify({ 
+          selectedSong: suggestion.title, 
+          //@ts-ignore
+          userData: JSON.parse(Cookies.get("userData")), 
+          roomId: roomId })
       });
     } catch (error) {
       console.error('Error sending selected song to backend:', error);
@@ -79,12 +82,16 @@ const AutoCompleteComponent = ({ onSongSelect }: { onSongSelect: any }) => {
 
   const handleKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
+      const roomId = window.location.pathname.split('room').pop();
       try {
         const response = await fetch('http://localhost:5000/api/download/youtube', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          //@ts-ignore
-          body: JSON.stringify({ searchvalue: value, userData: JSON.parse(Cookies.get("userData")), roomId: 1 })
+          body: JSON.stringify({ 
+            searchvalue: value, 
+            //@ts-ignore
+            userData: JSON.parse(Cookies.get("userData")), 
+            roomId: roomId })
         });
         setValue("");
         const data = await response.json();
