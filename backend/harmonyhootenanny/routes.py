@@ -315,8 +315,8 @@ def searchbar():
     print("Link: "+search_value)
     user_data = data.get('userData')
 
-    room_id = user_data.get('roomId')
-    user_id = user_data.get('userId')
+    room_id = data.get('roomId')
+    user_id = 1 #user_data.get('userId')
     
     # Check if it is a Youtube link
     youtube_regex = r'^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$'
@@ -324,12 +324,12 @@ def searchbar():
     if re.match(youtube_regex, search_value):
         # Initialize the YoutubeDownloader only, if it is a Youtube link
         youtube_downloader = YoutubeDownloader()
-        title, status_code = youtube_downloader.download_video(search_value)
+        song_id, status_code = youtube_downloader.download_video(search_value)
         if status_code == 200:
             # Add the song to the queue
-            #add_to_queue(room_id, song_id)
-            #add_song_to_queue(song_id, room_id, user_id)
-            return jsonify({'message': 'Youtube song successfully found', 'title': title}), 200
+            add_to_queue(room_id, song_id)
+            add_song_to_queue(song_id, room_id, user_id)
+            return jsonify({'message': 'Youtube song successfully found', 'title': song_id}), 200
         return jsonify({'error': 'Failed to download video'}), status_code
     else:
         # Return a message indicating that it was not a YouTube link
@@ -380,8 +380,8 @@ def handle_selected_song():
     selected_song = data.get('selectedSong')
     user_data = data.get('userData')
 
-    room_id = user_data.get('roomId')
-    user_id = user_data.get('userId')
+    room_id = data.get('roomId')
+    user_id = 1 #user_data.get('userId')
 
     if selected_song:
         try:
@@ -394,9 +394,10 @@ def handle_selected_song():
 
                 if result:
                     song_id = result['song_id']
+                    print(song_id)
                     # Add the song to the queue
-                    #add_to_queue(room_id, song_id)
-                    #add_song_to_queue(song_id, room_id, user_id)
+                    add_to_queue(room_id, song_id)
+                    add_song_to_queue(song_id, room_id, user_id)
                     return jsonify({'message': 'Selected song found and added to queue', 'songId': song_id}), 200
                 else:
                     return jsonify({'error': 'Song not found'}), 404

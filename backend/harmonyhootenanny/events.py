@@ -148,6 +148,7 @@ def handle_play_song(room_id: int):
 
 def add_to_queue(room_id: int, song_id: int):
     song_schedulers[room_id].add_to_queue(song_id)
+    print("+++++")
     
 """
 @socketio.on("control")

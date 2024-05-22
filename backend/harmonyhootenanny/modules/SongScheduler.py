@@ -142,6 +142,7 @@ class SongScheduler:
     def add_to_queue(self, song_id: int) -> None:
         """Adds a song to the queue based on its ID."""
         song_props = get_song(song_id)
+        print("++++++++++++++++")
         new_song = _Song(song_props[0], song_props[1], song_props[2], song_props[3])
         self.queue.append(new_song)
     

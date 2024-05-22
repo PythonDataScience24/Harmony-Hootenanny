@@ -15,26 +15,25 @@ class YoutubeDownloader:
                 artist = yt.author
                 duration = yt.length
                 # Check if song is in database already
-                '''
+                
                 with get_db_connection() as conn:
                     cursor = conn.cursor()
                     cursor.execute("SELECT song_id FROM songs WHERE title=? AND artist=?", (title, artist))
                     existing_song = cursor.fetchone()
                     if existing_song:
                         return existing_song[0], 200  # returns songId
-                '''
-                # Song doenst exist, download it
-                mp3_path = f"{self.output_path}/{artist} - {title}.mp3"
-                stream.download(output_path=self.output_path, filename=f"{title}.mp4")
-                os.rename(f"{self.output_path}/{title}.mp4", mp3_path)
-                # Put the song in the database and return the songId
-                '''cursor.execute("INSERT INTO songs (title, artist, duration) VALUES (?, ?, ?)", (title, artist, duration))
-                conn.commit()
-                return cursor.lastrowid , 200
-                '''
-                return ("All good"), 200
+                
+                    # Song doenst exist, download it
+                    mp3_path = f"{self.output_path}/{artist} - {title}.mp3"
+                    stream.download(output_path=self.output_path, filename=f"{title}.mp4")
+                    os.rename(f"{self.output_path}/{title}.mp4", mp3_path)
+                    # Put the song in the database and return the songId
+                    cursor.execute("INSERT INTO songs (title, artist, duration) VALUES (?, ?, ?)", (title, artist, duration))
+                    conn.commit()
+                    return cursor.lastrowid , 200
+                
             else:
                 return 'No MP3 stream available for this video', 404
         except Exception as e:
-            print("Error: "+ e)
+            print("Error: ", e)
             return str(e), 500

@@ -68,7 +68,7 @@ const AutoCompleteComponent = ({ onSongSelect }: { onSongSelect: any }) => {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         //@ts-ignore
-        body: JSON.stringify({ selectedSong: suggestion.title, userData: JSON.parse(Cookies.get("userData")) })
+        body: JSON.stringify({ selectedSong: suggestion.title, userData: JSON.parse(Cookies.get("userData")), roomId: 1 })
       });
     } catch (error) {
       console.error('Error sending selected song to backend:', error);
@@ -84,7 +84,7 @@ const AutoCompleteComponent = ({ onSongSelect }: { onSongSelect: any }) => {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           //@ts-ignore
-          body: JSON.stringify({ searchvalue: value, userData: JSON.parse(Cookies.get("userData")) })
+          body: JSON.stringify({ searchvalue: value, userData: JSON.parse(Cookies.get("userData")), roomId: 1 })
         });
         setValue("");
         const data = await response.json();
