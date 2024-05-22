@@ -6,6 +6,7 @@ import sqlite3
 import re
 from flask import Blueprint, request, jsonify, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
+from harmonyhootenanny.modules.usernameID import get_user_id
 from harmonyhootenanny.events import add_to_queue
 from database import add_song_to_queue, get_db_connection
 from harmonyhootenanny.modules.youtubedownloader import YoutubeDownloader
@@ -313,11 +314,12 @@ def searchbar():
     data = request.json
     search_value = data.get('searchvalue')
     print("Link: "+search_value)
-    user_data = data.get('userData')
+    userdata = data.get('userData')
+    username=userdata['username']
 
     room_id = data.get('roomId')
-    user_id = 1 #user_data.get('userId')
-    
+    user_id = get_user_id(username)
+
     # Check if it is a Youtube link
     youtube_regex = r'^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$'
     
@@ -326,10 +328,10 @@ def searchbar():
         youtube_downloader = YoutubeDownloader()
         song_id, status_code = youtube_downloader.download_video(search_value)
         if status_code == 200:
-            # Add the song to the queue
-            add_to_queue(room_id, song_id)
-            add_song_to_queue(song_id, room_id, user_id)
-            return jsonify({'message': 'Youtube song successfully found', 'title': song_id}), 200
+            #Add the song to the queue
+            #add_to_queue(room_id, song_id)
+            #add_song_to_queue(song_id, room_id, user_id)
+            return jsonify({'message': 'Youtube song successfully found', 'songId': song_id}), 200
         return jsonify({'error': 'Failed to download video'}), status_code
     else:
         # Return a message indicating that it was not a YouTube link
@@ -378,10 +380,11 @@ def handle_selected_song():
     """
     data = request.json
     selected_song = data.get('selectedSong')
-    user_data = data.get('userData')
+    userdata = data.get('userData')
+    username=userdata['username']
 
     room_id = data.get('roomId')
-    user_id = 1 #user_data.get('userId')
+    user_id = get_user_id(username)
 
     if selected_song:
         try:
@@ -394,10 +397,9 @@ def handle_selected_song():
 
                 if result:
                     song_id = result['song_id']
-                    print(song_id)
-                    # Add the song to the queue
-                    add_to_queue(room_id, song_id)
-                    add_song_to_queue(song_id, room_id, user_id)
+                    #Add the song to the queue
+                    #add_to_queue(room_id, song_id)
+                    #add_song_to_queue(song_id, room_id, user_id)
                     return jsonify({'message': 'Selected song found and added to queue', 'songId': song_id}), 200
                 else:
                     return jsonify({'error': 'Song not found'}), 404
