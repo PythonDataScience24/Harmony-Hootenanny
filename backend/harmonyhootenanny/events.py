@@ -10,6 +10,26 @@ active_users_by_room = {}  # {room_id: {username1, username2, ...}}
 sid_to_user = {}  # {socket_id: username}
 song_schedulers: dict[int, SongScheduler] = {}  # {room_id: SongScheduler instance}
 
+def get_or_create_scheduler(room_id):
+    """
+    Retrieves the SongScheduler instance for a given room_id, or creates one if it does not exist.
+
+    Args:
+        room_id (int): The unique identifier for the room.
+
+    Returns:
+        SongScheduler: The SongScheduler instance associated with the specified room_id.
+
+    This function checks if a SongScheduler instance exists for the provided room_id in the
+    song_schedulers dictionary. If an instance does not exist, it creates a new SongScheduler
+    for that room, starts its scheduling thread, and stores it in the song_schedulers dictionary.
+    Finally, it returns the SongScheduler instance for the specified room_id.
+    """
+    if room_id not in song_schedulers:
+        song_schedulers[room_id] = SongScheduler(room_id, socketio)
+        song_schedulers[room_id].start_thread()
+    return song_schedulers[room_id]
+
 @socketio.on("connect")
 def handle_connect():
     """
@@ -75,13 +95,10 @@ def handle_join_room(room_id: int, username: str):
         - Emits an "active_users" event to all users in the same room.
     """
     # Create a SongScheduler instance for the room if it doesn't exist
-    if room_id not in song_schedulers.keys():
-        song_schedulers[room_id] = SongScheduler(room_id, socketio)
-        song_schedulers[room_id].start_thread()
-        active_users_by_room [room_id] = set()
+    scheduler = get_or_create_scheduler(room_id)
 
     # Add the user's request.sid to the active users list for the room
-    active_users_by_room[room_id].add(username)
+    active_users_by_room.setdefault(room_id, set()).add(username)
 
     # Associate the user's socket ID with their username
     sid_to_user[request.sid] = username
@@ -93,8 +110,8 @@ def handle_join_room(room_id: int, username: str):
     add_user_action('join_room', room_id, username)
 
     # Emit "song_queue" and "currently_playing" events to the new user
-    emit("song_queue", {"queue": song_schedulers[room_id].get_queue()}, room=request.sid)
-    emit("currently_playing", song_schedulers[room_id].get_current_song(), room=request.sid)
+    emit("song_queue", {"queue": scheduler.get_queue()}, room=request.sid)
+    emit("currently_playing", scheduler.get_current_song(), room=request.sid)
 
     # Emit an "active_users" event to all users in the same room
     emit("active_users", {"users": list(active_users_by_room[room_id])}, room=room_id)
@@ -112,7 +129,8 @@ def handle_skip_song(room_id: int, username: str):
     Returns:
         None
     """
-    song_schedulers[room_id].skip()
+    scheduler = get_or_create_scheduler(room_id)
+    scheduler.skip()
     
     # Add user action to database
     add_user_action('skip_song', room_id, username)
@@ -128,7 +146,8 @@ def handle_pause_song(room_id: int):
     Returns:
         None
     """
-    song_schedulers[room_id].pause()
+    scheduler = get_or_create_scheduler(room_id)
+    scheduler.pause()
     emit("pause_song","paused", room=room_id)
 
 @socketio.on("play_song")
@@ -142,12 +161,14 @@ def handle_play_song(room_id: int):
     Returns:
         None
     """
-    progress = song_schedulers[room_id].play()
+    scheduler = get_or_create_scheduler(room_id)
+    progress = scheduler.play()
     emit("play_song", {"progress":progress} ,room=room_id)
 
 
-def add_to_queue(room_id: int, song_id: int):
-    song_schedulers[room_id].add_to_queue(song_id)
+def add_to_scheduler_queue(room_id: int, song_id: int):
+    scheduler = get_or_create_scheduler(room_id)
+    scheduler.add_to_queue(song_id)
     
 """
 @socketio.on("control")

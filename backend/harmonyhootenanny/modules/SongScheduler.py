@@ -4,7 +4,7 @@ import threading
 import time
 from ..extensions import socketio
 from flask_socketio import emit
-from database import get_queue, get_song
+from database import get_song, get_queue
 
 class _Song:
     """
@@ -112,7 +112,6 @@ class SongScheduler:
                     self.socketio.emit("currently_playing", self.get_current_song(), room=self.room_id)
                 else:
                     self.skip()
-
             time.sleep(self.check_interval)
                 
     def skip(self) -> None:
@@ -142,8 +141,10 @@ class SongScheduler:
     def add_to_queue(self, song_id: int) -> None:
         """Adds a song to the queue based on its ID."""
         song_props = get_song(song_id)
-        new_song = _Song(song_props[0], song_props[1], song_props[2], song_props[3])
+        new_song = _Song(song_props["title"], song_props["artist"], song_props["src"], song_props["duration"])
         self.queue.append(new_song)
+        print("Queue:", self.get_queue())
+        self.socketio.emit("song_queue", {"queue": self.get_queue()}, room=self.room_id)
     
     def get_queue(self) -> list[dict]:
         """Returns a list of dictionaries representing songs in the queue."""
