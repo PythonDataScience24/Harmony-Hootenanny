@@ -90,7 +90,7 @@ def add_song_to_db(title:str, artist:str, duration:int, fileName:str):
         print(f"SQLite error code: {e.sqlite_errorcode}")
         print(f"SQLite error name: {e.sqlite_errorname}")
 
-def add_song_to_queue(songId:int, roomId:int, userId:int):
+def add_song_to_db_queue(songId:int, roomId:int, userId:int):
     """
     Add a song to the queue.
 
