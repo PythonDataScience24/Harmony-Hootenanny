@@ -36,7 +36,30 @@ try:
                             GROUP BY artist
                             ORDER BY count DESC
                             LIMIT 1
-                            """, room_id)
+                            """, room_id),
+            'most_popular_actions': get_stat(cursor, """
+                                SELECT action_type, COUNT(*) as count
+                                FROM user_actions
+                                WHERE room_id=?
+                                GROUP BY action_type
+                                ORDER BY count DESC
+                                """, room_id),
+            'top_skipper': get_stat(cursor, """
+                               SELECT user_id, COUNT(*) as count
+                                FROM user_actions
+                                WHERE room_id=? AND action_type='skip_song'
+                                GROUP BY user_id
+                                ORDER BY count DESC
+                                LIMIT 1
+                                """, room_id),
+            'top_enqueuer': get_stat(cursor, """
+                               SELECT user_id, COUNT(*) as count
+                                FROM user_actions
+                                WHERE room_id=? AND action_type='enqueue_song'
+                                GROUP BY user_id
+                                ORDER BY count DESC
+                                LIMIT 1
+                                """, room_id)                    
         }
 
     print(room_data)

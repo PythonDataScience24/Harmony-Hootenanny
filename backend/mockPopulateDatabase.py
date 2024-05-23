@@ -69,13 +69,32 @@ def add_queues():
     for queue_entry in queues:
         add_song_to_queue(queue_entry[1], queue_entry[2], queue_entry[3])
 
-# Populate the database with sample data
+# Add sample user actions to the database
+def add_user_actions():
+    user_actions_mockfile = open("./mockData/userActions.csv", "r")
+    user_actions = []
+    for line in user_actions_mockfile:
+        line = line.strip()  # to skip \n at every end of line
+        user_action_entry = line.split(",")
+        user_actions.append(user_action_entry)
+    user_actions.pop(0)  # remove header
+    try:
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(f'INSERT INTO user_actions (action_id, action_type, action_timestamp, room_id, user_id) VALUES (\'{user_action_entry[0]}\', \'{user_action_entry[1]}\', \'{user_action_entry[2]}\', \'{user_action_entry[3]}\' , \'{user_action_entry[4]}\')')
+            conn.commit()
+            print("User actions successfully added to database")
+    except sqlite3.Error as e:
+        print(f"SQLite error code: {e.sqlite_errorcode}")
+        print(f"SQLite error name: {e.sqlite_errorname}")
+
+# Update the populate_database function
 def populate_database():
     # add_users()
     # add_songs()
     # add_rooms()
     # add_queues()
-    pass
+    add_user_actions()
 
 if __name__ == "__main__":
     init_db()

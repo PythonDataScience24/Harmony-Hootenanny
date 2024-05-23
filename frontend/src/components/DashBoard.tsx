@@ -47,6 +47,7 @@ const DashBoard = () => {
                     <p>Gesamtspielzeit: {data[room].total_play_time}</p>
                     <p>Am häufigsten gespieltes Lied: {data[room].most_played_song}</p>
                     <p>Top-Künstler: {data[room].top_artist}</p>
+                    <img src={`http://localhost:5000/dashboard/charts/${room}`} alt={`${room} chart`} />
                 </div>
             ))}
         </div>

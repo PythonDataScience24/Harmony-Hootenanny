@@ -7,6 +7,7 @@ from flask import Blueprint, request, jsonify, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 from database import get_db_connection
 from harmonyhootenanny.modules.youtubedownloader import YoutubeDownloader
+from flask import send_from_directory
 
 
 # Create a blueprint for your main routes
@@ -340,31 +341,56 @@ def get_dashboard():
     - top artist
     """
     try:
-        def get_stat(cursor, query, room_id):
+        def get_stats(cursor, query, room_id):
             cursor.execute(query, (room_id,))
-            return cursor.fetchone()[0]
+            rows = cursor.fetchall()
+            return [{description[0]: value for description, value in zip(cursor.description, row)} for row in rows]
 
     
         with get_db_connection() as db:
             cursor = db.cursor()
             room_data = {}
             for room_id in [1, 2, 3]:
-                room_data[f'room{room_id}'] = {
-                    'number_of_listeners': get_stat(cursor, "Select number_of_listeners FROM rooms WHERE room_id=?", room_id),
-                    'total_play_time': get_stat(cursor, "SELECT SUM(duration) FROM songs JOIN queues on songs.song_id = queues.song_id WHERE queues.room_id=?", room_id),
-                    'most_played_song': get_stat(cursor, """
+                 room_data[f'room{room_id}'] ={
+                    'room_id': room_id,
+                    'number_of_listeners': get_stats(cursor, "Select number_of_listeners FROM rooms WHERE room_id=?", room_id),
+                    'total_play_time': get_stats(cursor, "SELECT SUM(duration) FROM songs JOIN queues on songs.song_id = queues.song_id WHERE queues.room_id=?", room_id),
+                    'most_played_song': get_stats(cursor, """
                                SELECT title, COUNT(*) as count
                                 FROM songs JOIN queues on songs.song_id = queues.song_id
                                 WHERE queues.room_id=?
                                 GROUP BY songs.song_id
                                 ORDER BY count DESC
-                                LIMIT 1
+                                Limit 3
                                 """, room_id),
-                    'top_artist': get_stat(cursor, """
+                    'top_artist': get_stats(cursor, """
                                SELECT artist, COUNT(*) as count
                                 FROM songs JOIN queues on songs.song_id = queues.song_id
                                 WHERE queues.room_id=?
                                 GROUP BY artist
+                                ORDER BY count DESC
+                                Limit 3
+                                """, room_id),
+                     'most_popular_actions': get_stats(cursor, """
+                                SELECT action_type, COUNT(*) as count
+                                FROM user_actions
+                                WHERE room_id=?
+                                GROUP BY action_type
+                                ORDER BY count DESC
+                                """, room_id),
+                    'top_skipper': get_stats(cursor, """
+                               SELECT user_id, COUNT(*) as count
+                                FROM user_actions
+                                WHERE room_id=? AND action_type='skip_song'
+                                GROUP BY user_id
+                                ORDER BY count DESC
+                                LIMIT 1
+                                """, room_id),
+                    'top_enqueuer': get_stats(cursor, """
+                               SELECT user_id, COUNT(*) as count
+                                FROM user_actions
+                                WHERE room_id=? AND action_type='enqueue_song'
+                                GROUP BY user_id
                                 ORDER BY count DESC
                                 LIMIT 1
                                 """, room_id)
@@ -374,3 +400,9 @@ def get_dashboard():
         
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    
+
+@main.route('/dashboard/charts/<room>', methods=['GET'])
+def dashboard_chart(room):
+    charts_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'charts')
+    return send_from_directory(charts_dir, f'{room}.png', mimetype='image/png')
