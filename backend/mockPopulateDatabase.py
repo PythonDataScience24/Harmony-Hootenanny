@@ -7,36 +7,25 @@ from database import init_db, add_song_to_db, add_song_to_queue, get_db_connecti
 
 # Add sample users to the database
 def add_users():
-    users_mockfile = open("./mockData/users.csv", "r")
-    users = []
-    for line in users_mockfile:
-        line = line[0:-2] # to skip \n at every end of line
-        user = line.split(",")
-        users.append(user)
+    with open("./mockData/users.csv", "r") as users_mockfile:
+        users = [line.strip().split(",") for line in users_mockfile]
     users.pop(0)
     try:
-        for user in users:
-            with get_db_connection() as conn:
-                conn.cursor().execute(f'INSERT INTO users (user_id, username, password_hash) VALUES (\'{user[0]}\', \'{user[1]}\', \'{user[2]}\')')
-                conn.commit()
-                print("Users successfully added to database")
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.executemany('INSERT INTO users (user_id, username, password_hash) VALUES (?, ?, ?)', users)
+            conn.commit()
+            print("Users successfully added to database")
     except sqlite3.Error as e:
-        print(f"SQLite error code: {e.sqlite_errorcode}")
-        print(f"SQLite error name: {e.sqlite_errorname}")
+        print(f"SQLite error: {e}")
 
 # Add sample songs to the database
 def add_songs():
-    songs_mockfile = open("./mockData/songs.csv", "r")
-    songs = []
-    for line in songs_mockfile:
-        line = line[0:-2] # to skip \n at every end of line
-        song = line.split(",")
-        songs.append(song)
+    with open("./mockData/songs.csv", "r") as songs_mockfile:
+        songs = [line.strip().split(",") for line in songs_mockfile]
     songs.pop(0)
     for song in songs:
         add_song_to_db(song[2], song[3], song[4], song[1])
-    # add_song_to_db("One Love", "Bob Marley", 164, "Bob Marley - One Love.mp3")
-    # add_song_to_db("Down Under", "Men At Work", 240, "Men At Work - Down Under (Official HD Video).mp3")
 
 # Add sample rooms to the database
 def add_rooms():
@@ -53,47 +42,36 @@ def add_rooms():
             conn.commit()
             print("Rooms successfully added to database")
     except sqlite3.Error as e:
-        print(f"SQLite error code: {e.sqlite_errorcode}")
-        print(f"SQLite error name: {e.sqlite_errorname}")
-
+        print(f"SQLite error: {e}")
 
 # Add sample queue entries to the database
 def add_queues():
-    queue_mockfile = open("./mockData/queues.csv", "r")
-    queues = []
-    for line in queue_mockfile:
-        line = line[0:-2] # to skip \n at every end of line
-        queue_entry = line.split(",")
-        queues.append(queue_entry)
+    with open("./mockData/queues.csv", "r") as queue_mockfile:
+        queues = [line.strip().split(",") for line in queue_mockfile]
     queues.pop(0)
     for queue_entry in queues:
         add_song_to_queue(queue_entry[1], queue_entry[2], queue_entry[3])
 
 # Add sample user actions to the database
 def add_user_actions():
-    user_actions_mockfile = open("./mockData/userActions.csv", "r")
-    user_actions = []
-    for line in user_actions_mockfile:
-        line = line.strip()  # to skip \n at every end of line
-        user_action_entry = line.split(",")
-        user_actions.append(user_action_entry)
+    with open("./mockData/userActions.csv", "r") as user_actions_mockfile:
+        user_actions = [line.strip().split(",") for line in user_actions_mockfile]
     user_actions.pop(0)  # remove header
     try:
         with get_db_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute(f'INSERT INTO user_actions (action_id, action_type, action_timestamp, room_id, user_id) VALUES (\'{user_action_entry[0]}\', \'{user_action_entry[1]}\', \'{user_action_entry[2]}\', \'{user_action_entry[3]}\' , \'{user_action_entry[4]}\')')
+            cursor.executemany('INSERT INTO user_actions (action_id, action_type, action_timestamp, room_id, user_id) VALUES (?, ?, ?, ?, ?)', user_actions)
             conn.commit()
             print("User actions successfully added to database")
     except sqlite3.Error as e:
-        print(f"SQLite error code: {e.sqlite_errorcode}")
-        print(f"SQLite error name: {e.sqlite_errorname}")
+        print(f"SQLite error: {e}")
 
 # Update the populate_database function
 def populate_database():
-    # add_users()
-    # add_songs()
-    # add_rooms()
-    # add_queues()
+    add_users()
+    add_songs()
+    add_rooms()
+    add_queues()
     add_user_actions()
 
 if __name__ == "__main__":
