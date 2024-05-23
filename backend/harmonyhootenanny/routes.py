@@ -328,6 +328,12 @@ def searchbar():
         youtube_downloader = YoutubeDownloader()
         song_id, status_code = youtube_downloader.download_video(search_value)
         if status_code == 200:
+            # Ensure the scheduler is initialized
+            get_or_create_scheduler(room_id)
+            # Add the song to the queue in songSchedular
+            add_to_scheduler_queue(room_id, song_id)
+            # Add Song to queue in database
+            add_song_to_db_queue(song_id, room_id, user_id)
             return jsonify({'message': 'Youtube song successfully found'}), 200
         return jsonify({'error': 'Failed to download video'}), status_code
     else:
