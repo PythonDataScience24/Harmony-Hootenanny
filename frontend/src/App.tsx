@@ -1,6 +1,5 @@
 import { Box, Button, Divider, Link } from "@mui/material";
 import {MainPage1, MainPage2, MainPage3} from "./components/MainPage/MainPage";
-import SecondPage from "./components/SecondPage";
 import RoomSelection from "./components/SecondPage/RoomSelection";
 import { Route, Routes } from "react-router-dom";
 import { StrictMode, useMemo } from "react";
@@ -48,7 +47,6 @@ export default function App() {
             <Route path="/main/room1" element={<MainPage1 />} />
             <Route path="/main/room2" element={<MainPage2 />} />
             <Route path="/main/room3" element={<MainPage3 />} />
-            <Route path="/test" element={<SecondPage />} />
             <Route path="/login" element={<AuthForm />} />
           </Routes>
         </Box>

@@ -5,14 +5,16 @@ import "react-h5-audio-player/lib/styles.css";
 import AutoCompleteComponent from '../AutoCompleteComponent';
 import { PeopleInChannel } from './PeopleInChannel';
 
-function MainWindow({ currentlyPlaying, activeUsers, skip, play, pause, song }:
+function MainWindow({ currentlyPlaying, activeUsers, skip, play, pause, song, onSongSelect, onSongDownload}:
     {
         currentlyPlaying: string,
         activeUsers?: string[],
         skip: () => void,
         play: () => void,
         pause: () => void,
-        song: JSON
+        song: JSON,
+        onSongSelect: (new_song: string) => void,
+        onSongDownload: (new_song: string) => void,
     }) {
     const [filename, setFilename] = useState(encodeURIComponent(currentlyPlaying));
     const backendUrl = "http://localhost:5000";
@@ -37,9 +39,8 @@ function MainWindow({ currentlyPlaying, activeUsers, skip, play, pause, song }:
                 <PeopleInChannel users={activeUsers} />
                 <div>
                     <AutoCompleteComponent
-                        onSongSelect={(selectedTitle: string) =>
-                            setFilename(encodeURIComponent(selectedTitle))
-                        }
+                        onSongSelect={onSongSelect}
+                        onSongDownload={onSongDownload}
                     />
                 </div>
             </Box>
@@ -49,12 +50,14 @@ function MainWindow({ currentlyPlaying, activeUsers, skip, play, pause, song }:
                     justifyContent: "center",
                 }}
             >
+                <h3>                        
                 {//@ts-ignore
-                    song.title
-                } -
+                        song.title
+                    } - 
                 {//@ts-ignore
                     song.artist
                 }
+                </h3>
             </Box>
             <Box
                 sx={{

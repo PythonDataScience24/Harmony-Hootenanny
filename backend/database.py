@@ -205,7 +205,7 @@ def get_current_song(roomId:int) -> dict:
         print(f"SQLite error code: {e.sqlite_errorcode}")
         print(f"SQLite error name: {e.sqlite_errorname}")
 
-def get_song(songId:int):
+def get_song_by_id(songId:int):
     """
     Get a song by ID.
 
@@ -236,7 +236,30 @@ def get_song(songId:int):
                 return print("SongID not found in database")
     except sqlite3.Error as e:
         print(f"SQLite error code: {e.sqlite_errorcode}")
-        print(f"SQLite error name: {e.sqlite_errorname}")
+def get_song_id_by_name(song_name:str):
+    """
+    Get a song by ID.
+
+    Args:
+        songId (int): Song ID.
+
+    Returns:
+        dict: Song details including title, artist, source, and duration.
+
+    Raises:
+        sqlite3.Error: Database interaction error.
+    """
+    try:
+        with get_db_connection() as conn:
+            cursor = conn.cursor().execute(f"select song_id from songs where title like '%{song_name}%'")
+            row = cursor.fetchone()
+            if row:
+                return row[0]
+            else:
+                return print("Song name not found in database")
+    except sqlite3.Error as e:
+        print(f"SQLite error code: {e.sqlite_errorcode}")
+
 
 def add_user_action(action_type: str, room_id: int, username: str):
     """

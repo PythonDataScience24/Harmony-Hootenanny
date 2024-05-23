@@ -1,9 +1,10 @@
-
+import re
+from harmonyhootenanny.modules.youtubedownloader import YoutubeDownloader
 from harmonyhootenanny.modules.SongScheduler import SongScheduler
-from database import add_user_action, get_current_song, get_queue
+from database import add_user_action, get_current_song, get_queue, get_song_id_by_name
 from .extensions import socketio
 from flask_socketio import emit, join_room, leave_room
-from flask import request
+from flask import jsonify, request
 
 # Initialize an empty dictionary to store active users in each room
 active_users_by_room = {}  # {room_id: {username1, username2, ...}}
@@ -166,9 +167,37 @@ def handle_play_song(room_id: int):
     emit("play_song", {"progress":progress} ,room=room_id)
 
 
+@socketio.on("select_song")
+def handle_select_song(song_title_selected:str, room_id: int):
+    res = song_title_selected.split(" - ")
+    title, artist = res[0], res[1]
+    song_id = get_song_id_by_name(title)
+    add_to_scheduler_queue(room_id, song_id)
+
+@socketio.on("download_song")
+def handle_download_song(url:str, room_id: int):
+    print(url, room_id)
+    # Check if it is a Youtube link
+    youtube_regex = r'^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$'
+    if re.match(youtube_regex, url):
+        # Initialize the YoutubeDownloader only, if it is a Youtube link
+        youtube_downloader = YoutubeDownloader()
+        song_id, status_code = youtube_downloader.download_video(url)
+        if status_code == 200:
+            add_to_scheduler_queue(room_id, song_id)
+        else:
+            print("Download failed!")
+    else:
+        # Return a message indicating that it was not a YouTube link
+        print("URL was not a valid YouTube link")
+
+
+
+
 def add_to_scheduler_queue(room_id: int, song_id: int):
     scheduler = get_or_create_scheduler(room_id)
     scheduler.add_to_queue(song_id)
+    emit("song_queue", {"queue": scheduler.get_queue()}, room=room_id)
     
 """
 @socketio.on("control")

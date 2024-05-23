@@ -2,14 +2,13 @@ import Cookies from "js-cookie";
 import React, { useState } from "react";
 // @ts-ignore
 import Autosuggest from "react-autosuggest";
-import { isGeneratorFunction } from "util/types";
 
 const theme = {
   input: {
     height: '35px',
     fontSize: '1.2rem',
     padding: '10px',
-    width: '100%',
+    minWidth: '390px',
     boxSizing: 'border-box',
     border: '1px solid',
     borderRadius: '4px',
@@ -21,6 +20,7 @@ const theme = {
     backgroundColor: '#333333',
     border: '1px solid',
     borderRadius: '4px',
+    maxWidth: '390px'
   },
   suggestion: {
     padding: '10px',
@@ -33,7 +33,11 @@ const theme = {
   },
 };
 
-const AutoCompleteComponent = ({ onSongSelect }: { onSongSelect: any }) => {
+const AutoCompleteComponent = ({ onSongSelect, onSongDownload }: { 
+  onSongSelect: (new_song: string) => void,
+  onSongDownload: (url: string) => void 
+}
+) => {
   const [value, setValue] = useState("");
   const [suggestions, setSuggestions] = useState([]);
 
@@ -61,18 +65,8 @@ const AutoCompleteComponent = ({ onSongSelect }: { onSongSelect: any }) => {
 
   // @ts-ignore
   const onSuggestionSelected = async (event, { suggestion }) => {
-    console.log("Selected suggestion:", suggestion);
-    const roomId = window.location.pathname.split('room').pop();
     try {
-      await fetch('http://localhost:5000/api/selected-song', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ 
-          selectedSong: suggestion.title, 
-          //@ts-ignore
-          userData: JSON.parse(Cookies.get("userData")), 
-          roomId: roomId })
-      });
+      onSongSelect(suggestion.title);
     } catch (error) {
       console.error('Error sending selected song to backend:', error);
     }
@@ -82,23 +76,10 @@ const AutoCompleteComponent = ({ onSongSelect }: { onSongSelect: any }) => {
 
   const handleKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      const roomId = window.location.pathname.split('room').pop();
       try {
-        const response = await fetch('http://localhost:5000/api/download/youtube', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            searchvalue: value, 
-            //@ts-ignore
-            userData: JSON.parse(Cookies.get("userData")), 
-            roomId: roomId })
-        });
-        setValue("");
-        const data = await response.json();
-        console.log(data);
-      }
-      catch (error) {
-        console.error('Error submitting to backend:', error);
+        onSongDownload(value)
+      } catch (error) {
+        console.error('Error downloading the song:', error);
       }
     }
   };

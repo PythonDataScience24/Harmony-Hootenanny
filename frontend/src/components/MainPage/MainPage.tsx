@@ -102,6 +102,14 @@ const MainPage: React.FC<MainPageProps> = ({ roomId }) => {
     socket.connect();
     socket.emit("pause_song", roomId);
   };
+  const select_song = (new_song: string) =>{
+    socket.connect();
+    socket.emit("select_song", new_song, roomId);
+  }
+  const download_song = (url: string) =>{
+    socket.connect();
+    socket.emit("download_song", url, roomId);
+  }
   return (
     <>
       <Box
@@ -117,7 +125,19 @@ const MainPage: React.FC<MainPageProps> = ({ roomId }) => {
         <Divider orientation="vertical" />
         <Box sx={{ flexGrow: 7, height: "100%" }}>      
         {//@ts-ignore
-          <MainWindow currentlyPlaying={filename} activeUsers={activeUsers} skip={skip} play={play} pause={pause} song={song}></MainWindow>
+          <MainWindow 
+          currentlyPlaying={filename} 
+          activeUsers={activeUsers} 
+          skip={skip} p
+          lay={play} 
+          pause={pause} 
+          onSongSelect={select_song}
+          onSongDownload={download_song}
+          //@ts-ignore
+          song={song} 
+          >
+
+          </MainWindow>
         }
         </Box>
 

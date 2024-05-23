@@ -30,7 +30,7 @@ function SongQueue({ queue }: { queue: [JSON] }) {
               <Box key={index}>
                 {index == 0 ? <Box key={"firstSong"}>Next Up:</Box> : <></>}
                 <Paper elevation={1} key={index}>
-                  <Box sx={{ padding: "10px" }} display={"flex"} flexDirection={"column"} gap={"5px"} >
+                  <Box sx={{ padding: "10px", maxWidth:"200px" }} display={"flex"} flexDirection={"column"} gap={"5px"} >
                     {//@ts-ignore
                       <Box >Title: {song.title}</Box>
                     }
@@ -38,7 +38,7 @@ function SongQueue({ queue }: { queue: [JSON] }) {
                       <Box>Artist: {song.artist}</Box>
                     }
                     {//@ts-ignore
-                      <Box>Duration: {Math.floor(song.duration / 60)}:{song.duration - Math.floor(song.duration / 60) * 60}</Box>
+                      <Box>Duration: {Math.floor(song.duration / 60)}:{(song.duration - Math.floor(song.duration / 60) * 60).toString().padStart(2, '0')}</Box>
                     }
                   </Box>
                 </Paper>
