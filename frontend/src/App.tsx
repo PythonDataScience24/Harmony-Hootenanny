@@ -1,5 +1,9 @@
 import { Box, Button, Divider, Link } from "@mui/material";
-import {MainPage1, MainPage2, MainPage3} from "./components/MainPage/MainPage";
+import {
+  MainPage1,
+  MainPage2,
+  MainPage3,
+} from "./components/MainPage/MainPage";
 import RoomSelection from "./components/SecondPage/RoomSelection";
 import { Route, Routes } from "react-router-dom";
 import { StrictMode, useMemo } from "react";
@@ -22,13 +26,16 @@ export default function App() {
     [prefersDarkMode]
   );
 
+  const textColor =
+    theme.palette.mode === "dark" ? "white" : "rgba(0, 0, 0, 0.87)";
+
   return (
     <StrictMode>
       <ThemeProvider theme={theme}>
         <CssBaseline enableColorScheme />
         <Box height={"10vh"} marginLeft="20px" alignContent={"center"}>
           <h1>
-            <Link href="/" style={{ color: "white", textDecoration: "none" }}>
+            <Link href="/" style={{ color: textColor, textDecoration: "none" }}>
               Harmony Hootenany
             </Link>
           </h1>
