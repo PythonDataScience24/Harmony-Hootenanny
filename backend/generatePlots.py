@@ -82,45 +82,55 @@ with get_db_connection() as db:
     # TOP ENQUEUERS
     x_data = [value["count"] for value in data["top_enqueuer"]]
     x_labels = [value["username"] for value in data["top_enqueuer"]]
-    print(x_data, x_labels)
     plt.bar(x_labels, x_data, color ='maroon', 
         width = 0.4)
     plt.yticks([15,16,17,18,19,20,21])
     plt.ylim(15)
+    plt.xlabel("username")
+    plt.ylabel("number of songs added to queue")
     plt.savefig("../frontend/public/topQueuers.png") 
 
     plt.clf()
-
-
     x_data = [value["count"] for value in data["top_skipper"]]
     x_labels = [value["username"] for value in data["top_skipper"]]
     plt.bar(x_labels, x_data, color ='red', 
         width = 0.4)
     plt.yticks([15,16,17,18,19,20,21, 22])
     plt.ylim(15)
+    plt.xlabel("username")
+    plt.ylabel("number of songs skipped")
     plt.savefig("../frontend/public/topSkippers.png") 
 
     plt.clf()
-
     y_data = [value["count"] for value in data["most_played_song1"]]
     y_label = [value["title"] for value in data["most_played_song1"]]
     plt.pie(y_data, labels = y_label)
     plt.savefig("../frontend/public/topSongs1.png") 
+
     plt.clf()
     y_data = [value["count"] for value in data["most_played_song2"]]
     y_label = [value["title"] for value in data["most_played_song2"]]
     plt.pie(y_data, labels = y_label)
     plt.savefig("../frontend/public/topSongs2.png") 
+
     plt.clf()
     y_data = [value["count"] for value in data["most_played_song3"]]
     y_label = [value["title"] for value in data["most_played_song3"]]
     plt.pie(y_data, labels = y_label)
+
     plt.savefig("../frontend/public/topSongs3.png") 
     plt.clf()
-
     x_data = [[data["number_of_listeners1"]][0][0]["number_of_listeners"],[data["number_of_listeners2"]][0][0]["number_of_listeners"],[data["number_of_listeners3"]][0][0]["number_of_listeners"]]
-    print(x_data)
-    x_labels = ["Room 1", "Room2", "Room 3"]
+    x_labels = ["Room 1", "Room 2", "Room 3"]
+    plt.ylabel("number of people tuning in")
     plt.bar(x_labels, x_data, width = 0.4)
     plt.savefig("../frontend/public/numberOfListeners.png") 
+
+    plt.clf()
+    x_data = [data["total_play_time1"][0]['SUM(duration)'],data["total_play_time2"][0]['SUM(duration)'],data["total_play_time3"][0]['SUM(duration)']]
+    x_labels = ["Room 1", "Room 2", "Room 3"]
+    plt.ylabel("total minutes played")
+    plt.bar(x_labels, x_data, width = 0.4)
+    plt.savefig("../frontend/public/playtime.png") 
+    
 

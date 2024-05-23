@@ -115,7 +115,7 @@ const DashBoard = () => {
           </Paper>
           <Paper elevation={paperElevation} sx={paperStyling}>
             Total Playtime: <br />
-            <img src="https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Glossary.svg" alt="" width={"100%"} />
+            <img src="/playtime.png" alt="" width={"100%"} />
           </Paper>
         </Box>
       </Box>
