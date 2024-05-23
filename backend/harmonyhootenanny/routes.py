@@ -404,5 +404,5 @@ def get_dashboard():
 
 @main.route('/dashboard/charts/<room>', methods=['GET'])
 def dashboard_chart(room):
-    charts_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'charts')
+    charts_dir = '../charts'
     return send_from_directory(charts_dir, f'{room}.png', mimetype='image/png')
