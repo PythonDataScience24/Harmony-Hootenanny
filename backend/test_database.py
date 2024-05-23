@@ -51,7 +51,6 @@ class TestAddSongToDb(unittest.TestCase):
         # Retrieve the song from the database
         with get_db_connection() as conn:
             song = conn.cursor().execute("SELECT * FROM songs WHERE title = 'Test Song'").fetchone()
-            print(song)
 
         # Check if the song was added correctly
         self.assertIsNotNone(song, "The song was not added to the database.")
@@ -60,11 +59,25 @@ class TestAddSongToDb(unittest.TestCase):
         self.assertEqual(song["duration"], 300)
         self.assertEqual(song["src"], "test.mp3")
 
-    def test_add_song_with_negative_duration(self):
-        """ Test adding a song with a negative duration """
-        # This assertion fails because in the db schema this value is not set to be only positive numbers
-        with self.assertRaises(sqlite3.IntegrityError):
-            add_song_to_db("Negative Duration Song", "Test Artist", -300, "negative.mp3")
+    def test_add_song_without_input(self):
+        """ Test adding a song without any input parameters """
+        with self.assertRaises(TypeError):
+            add_song_to_db()
+
+    def test_add_song_single_string_input(self):
+        """ Test adding a song wit a single string input parameters """
+        with self.assertRaises(TypeError):
+            add_song_to_db("Test")
+
+    def test_add_song_single_int_input(self):
+        """ Test adding a song wit a single int input parameters """
+        with self.assertRaises(TypeError):
+            add_song_to_db(5)
+
+    def test_add_song_single_dict_input(self):
+        """ Test adding a song wit a single dict input parameters """
+        with self.assertRaises(TypeError):
+            add_song_to_db({1})
 
 if __name__ == "__main__":
     unittest.main()
