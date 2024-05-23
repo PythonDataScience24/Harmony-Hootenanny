@@ -71,8 +71,11 @@ Tasks per milestone: read text again
 
 Since the first milestone we implemented several new features:
 
-- **Login**: We added user authentication to our app, so each user must be logged in to be able to join one of the rooms. This authentication will be used to identify and track the user. This is also preparation for the next milestone, where we will focus on tracking and visualizing user data.
-- **Websockets**: We implemented websocket functionality, so users can now join rooms. When entering a room, the user will retrieve the song queue and the current playing song from the database. Also all other participants in that room are visible and joining/leaving is updated in real time. The only missing part here is that currently, the logic for tracking when a song finishes is not fully implemented yet and therefore cannot play the next song. In our test data, it is specified that the song started playing on May 16 at 12:34, and since this time has passed, the song will be at 2:44 and not start at 0:00. Additionally, if one user presses pause, it will not pause for all users in the current room.
+- **Dashboard**: We added a dashboard page where you can see some (mostly mocked) user statistics. Here we display information like number of listeners in a room, top users who added songs to the queue as well as information about each room and more.
+- **Song Scheduler**: We finished the implementation of the SongScheduler which now pauses and skip songs for all users in the room. Also after a song is finished it will automatically play the next song from the queue.
+- **Youtube Downloader**: Using the searchbar you can now also add a link to a song on YouTube which will be downloaded and added to the database as well as the song queue. We also added a tooltip explaining how it works.
+- **Queue integration into Websocket**: We changed the logic from an API endpoint for the queue in the routes file into an event in the websocket.
+- **Mocked Database**: We created a script to populate the database with mock information so we have more data to analyze. These songs are **not** download. Therefore you can **not** play these songs although they appear in the search bar and will be added to the queue.
 
 ## Events
 
