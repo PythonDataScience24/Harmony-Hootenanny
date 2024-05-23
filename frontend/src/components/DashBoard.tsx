@@ -96,22 +96,22 @@ const DashBoard = () => {
         <Box sx={rowStyling}>
           <Paper elevation={paperElevation} sx={paperStyling}>
             Room 1: <br />
-            <img src="https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Glossary.svg" alt="" width={"100%"} />
+            <img src="/topSongs1.png" alt="" width={"100%"} />
           </Paper>
           <Paper elevation={paperElevation} sx={paperStyling}>
             Room 2: <br />
-            <img src="https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Glossary.svg" alt="" width={"100%"} />
+            <img src="/topSongs2.png" alt="" width={"100%"} />
           </Paper>
           <Paper elevation={paperElevation} sx={paperStyling}>
             Room 3: <br />
-            <img src="https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Glossary.svg" alt="" width={"100%"} />
+            <img src="/topSongs3.png" alt="" width={"100%"} />
           </Paper>
         </Box>
         Room Stats
         <Box sx={rowStyling}>
           <Paper elevation={paperElevation} sx={paperStyling}>
             Number of listeners: <br />
-            <img src="https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Glossary.svg" alt="" width={"100%"} />
+            <img src="/numberOfListeners.png" alt="" width={"100%"} />
           </Paper>
           <Paper elevation={paperElevation} sx={paperStyling}>
             Total Playtime: <br />
@@ -119,29 +119,7 @@ const DashBoard = () => {
           </Paper>
         </Box>
       </Box>
-      {/* 
-      {Object.keys(data).map((room, index) => (
-        <div key={room}>
-          <h2>{room}</h2>
-          <p>Anzahl der Hörer: {JSON.stringify(data[room])}</p>
-          <p>Gesamtspielzeit: 1</p>
-          <p>Am häufigsten gespieltes Lied: 1</p>
-          <p>Top-Künstler: 1</p>
-          <img
-            src={`http://localhost:5000/dashboard/charts/${index + 1}`}
-            alt={`${index + 1} chart`}
-          />
-        </div>
-      ))}
-      {Object.keys(data).map((room) => (
-        <div>
-          <h2>{room}</h2>
-          <img
-            src={`http://localhost:5000/dashboard/charts/${room}`}
-            alt={`${room} chart`}
-          />
-        </div>
-      ))} */}
+  
     </>
   );
 };

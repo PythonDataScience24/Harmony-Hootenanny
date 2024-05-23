@@ -16,16 +16,36 @@ with get_db_connection() as db:
     room_id = 1
     data = {
                     'room_id': room_id,
-                    'number_of_listeners': get_stats(cursor, "Select number_of_listeners FROM rooms WHERE room_id=?", room_id),
-                    'total_play_time': get_stats(cursor, "SELECT SUM(duration) FROM songs JOIN queues on songs.song_id = queues.song_id WHERE queues.room_id=?", room_id),
-                    'most_played_song': get_stats(cursor, """
+                    'number_of_listeners1': get_stats(cursor, "Select number_of_listeners FROM rooms WHERE room_id=?", 1),
+                    'number_of_listeners2': get_stats(cursor, "Select number_of_listeners FROM rooms WHERE room_id=?", 2),
+                    'number_of_listeners3': get_stats(cursor, "Select number_of_listeners FROM rooms WHERE room_id=?", 3),
+                    'total_play_time1': get_stats(cursor, "SELECT SUM(duration) FROM songs JOIN queues on songs.song_id = queues.song_id WHERE queues.room_id=?", 1),
+                    'total_play_time2': get_stats(cursor, "SELECT SUM(duration) FROM songs JOIN queues on songs.song_id = queues.song_id WHERE queues.room_id=?", 2),
+                    'total_play_time3': get_stats(cursor, "SELECT SUM(duration) FROM songs JOIN queues on songs.song_id = queues.song_id WHERE queues.room_id=?", 3),
+                    'most_played_song1': get_stats(cursor, """
                                SELECT title, COUNT(*) as count
                                 FROM songs JOIN queues on songs.song_id = queues.song_id
                                 WHERE queues.room_id=?
                                 GROUP BY songs.song_id
                                 ORDER BY count DESC
-                                Limit 3
-                                """, room_id),
+                                Limit 7
+                                """, 1),
+                    'most_played_song2': get_stats(cursor, """
+                               SELECT title, COUNT(*) as count
+                                FROM songs JOIN queues on songs.song_id = queues.song_id
+                                WHERE queues.room_id=?
+                                GROUP BY songs.song_id
+                                ORDER BY count DESC
+                                Limit 7
+                                """, 2),
+                    'most_played_song3': get_stats(cursor, """
+                               SELECT title, COUNT(*) as count
+                                FROM songs JOIN queues on songs.song_id = queues.song_id
+                                WHERE queues.room_id=?
+                                GROUP BY songs.song_id
+                                ORDER BY count DESC
+                                Limit 7
+                                """, 3),                        
                     'top_artist': get_stats(cursor, """
                                SELECT artist, COUNT(*) as count
                                 FROM songs JOIN queues on songs.song_id = queues.song_id
@@ -74,9 +94,33 @@ with get_db_connection() as db:
 
     x_data = [value["count"] for value in data["top_skipper"]]
     x_labels = [value["username"] for value in data["top_skipper"]]
-    print(x_data, x_labels)
     plt.bar(x_labels, x_data, color ='red', 
         width = 0.4)
     plt.yticks([15,16,17,18,19,20,21, 22])
     plt.ylim(15)
     plt.savefig("../frontend/public/topSkippers.png") 
+
+    plt.clf()
+
+    y_data = [value["count"] for value in data["most_played_song1"]]
+    y_label = [value["title"] for value in data["most_played_song1"]]
+    plt.pie(y_data, labels = y_label)
+    plt.savefig("../frontend/public/topSongs1.png") 
+    plt.clf()
+    y_data = [value["count"] for value in data["most_played_song2"]]
+    y_label = [value["title"] for value in data["most_played_song2"]]
+    plt.pie(y_data, labels = y_label)
+    plt.savefig("../frontend/public/topSongs2.png") 
+    plt.clf()
+    y_data = [value["count"] for value in data["most_played_song3"]]
+    y_label = [value["title"] for value in data["most_played_song3"]]
+    plt.pie(y_data, labels = y_label)
+    plt.savefig("../frontend/public/topSongs3.png") 
+    plt.clf()
+
+    x_data = [[data["number_of_listeners1"]][0][0]["number_of_listeners"],[data["number_of_listeners2"]][0][0]["number_of_listeners"],[data["number_of_listeners3"]][0][0]["number_of_listeners"]]
+    print(x_data)
+    x_labels = ["Room 1", "Room2", "Room 3"]
+    plt.bar(x_labels, x_data, width = 0.4)
+    plt.savefig("../frontend/public/numberOfListeners.png") 
+
