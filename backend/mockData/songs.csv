@@ -1,6 +1,7 @@
 song_id,src,title,artist,duration
-1,https://example.com/song1.mp3,Bohemian Rhapsody,Queen,354
-2,https://example.com/song2.mp3,Hotel California,Eagles,307
+1,Bob Marley - One Love.mp3,One Love,Bob Marley,164
+2,Men At Work - Down Under (Official HD Video).mp3,Down Under,Men At Work,240
+3,Hypnotized.mp3,Hypnotized,Purple Disco Machine,196
 3,https://example.com/song3.mp3,Imagine,John Lennon,183
 4,https://example.com/song4.mp3,Like a Rolling Stone,Bob Dylan,365
 5,https://example.com/song5.mp3,Stairway to Heaven,Led Zeppelin,482
