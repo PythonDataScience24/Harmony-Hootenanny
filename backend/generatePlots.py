@@ -1,6 +1,11 @@
 from matplotlib import pyplot as plt
 
 from database import get_db_connection
+
+"""
+DO NOT JUDGE THIS FILE, IT HAS BEEN MADE IN 15 MINUTES, I KNOW THERE'S A LOT WRONG
+"""
+
 def get_stats(cursor, query, room_id):
     cursor.execute(query, (room_id,))
     rows = cursor.fetchall()

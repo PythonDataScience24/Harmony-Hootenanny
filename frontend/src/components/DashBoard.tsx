@@ -70,7 +70,7 @@ const DashBoard = () => {
       >
         General Data
         <Box sx={rowStyling}>
-          <Paper elevation={paperElevation} sx={{ ...paperStyling, height: "100%" }}>
+          {/*<Paper elevation={paperElevation} sx={{ ...paperStyling, height: "100%" }}>
             <h3>
               Top Artists:
             </h3>
@@ -79,7 +79,7 @@ const DashBoard = () => {
               <li><h4>Numba 2</h4></li>
               <li><h4>3</h4></li>
             </ol>
-          </Paper>
+      </Paper>*/}
           <Paper elevation={paperElevation} sx={paperStyling}>
             Top Queuers: <br />
             <img src="/topQueuers.png" alt="" width={"100%"} />
