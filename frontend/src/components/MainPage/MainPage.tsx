@@ -5,6 +5,7 @@ import MainWindow from './MainWindow'
 import SongQueue from './SongQueue'
 import Cookies from 'js-cookie'
 import socket from '../../socket'
+import DashBoard from '../DashBoard'
 
 interface MainPageProps {
   roomId: number;
@@ -45,8 +46,8 @@ const MainPage: React.FC<MainPageProps> = ({ roomId }) => {
       // 'progress': -7079}
 
       setSong({
-        title:message.title,
-        artist:message.artist
+        title: message.title,
+        artist: message.artist
       })
       setFilename(encodeURIComponent(message.filename));
       encodeURIComponent(message.filename)
@@ -111,22 +112,26 @@ const MainPage: React.FC<MainPageProps> = ({ roomId }) => {
           justifyContent: "space-around"
         }}
       >
-        <Box sx={{ flexGrow: 1 }}>
+        <Box>
           <Rooms></Rooms>
         </Box>
         <Divider orientation="vertical" />
-        <Box sx={{ flexGrow: 7, height: "100%" }}>      
-        {//@ts-ignore
-          <MainWindow currentlyPlaying={filename} activeUsers={activeUsers} skip={skip} play={play} pause={pause} song={song}></MainWindow>
-        }
+        <Box sx={{ flexGrow: 7, height: "100%" }}>
+          {//@ts-ignore
+            roomId > 0 ? <MainWindow currentlyPlaying={filename} activeUsers={activeUsers} skip={skip} play={play} pause={pause} song={song}></MainWindow> :
+              <DashBoard />
+          }
         </Box>
 
-        <Divider orientation="vertical" />
-        <Box sx={{ flexGrow: 1 }}>
-          {
-            // @ts-ignore
-            <SongQueue queue={queue}></SongQueue>}
-        </Box>
+        {roomId > 0 ? <>
+          <Divider orientation="vertical" />
+          <Box sx={{ flexGrow: 1 }}>
+            {
+              // @ts-ignore
+              <SongQueue queue={queue}></SongQueue>}
+          </Box>
+        </> : <></>
+        }
       </Box >
     </>
   )
@@ -140,4 +145,7 @@ export function MainPage2() {
 }
 export function MainPage3() {
   return <MainPage roomId={3} />;
+}
+export function Dashboard() {
+  return <MainPage roomId={0} />;
 }

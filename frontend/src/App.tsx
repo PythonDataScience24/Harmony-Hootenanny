@@ -1,5 +1,5 @@
 import { Box, Button, Divider, Link } from "@mui/material";
-import {MainPage1, MainPage2, MainPage3} from "./components/MainPage/MainPage";
+import {MainPage1, MainPage2, MainPage3, Dashboard} from "./components/MainPage/MainPage";
 import SecondPage from "./components/SecondPage";
 import RoomSelection from "./components/SecondPage/RoomSelection";
 import { Route, Routes } from "react-router-dom";
@@ -10,7 +10,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { DARK_THEME } from "./colorthemes";
 import LoginLogoutButton from "./components/MainPage/LoginLogoutButton";
 import AuthForm from "./components/AuthForm/AuthForm";
-import DashBoard from "./components/DashBoard";
 
 export default function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -51,7 +50,7 @@ export default function App() {
             <Route path="/main/room3" element={<MainPage3 />} />
             <Route path="/test" element={<SecondPage />} />
             <Route path="/login" element={<AuthForm />} />
-            <Route path="/dashboard" element={<DashBoard />} />
+            <Route path="/main/dashboard" element={<Dashboard/>} />
           </Routes>
         </Box>
       </ThemeProvider>

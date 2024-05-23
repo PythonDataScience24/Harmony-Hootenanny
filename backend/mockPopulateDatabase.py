@@ -57,10 +57,13 @@ def add_user_actions():
     with open("./mockData/userActions.csv", "r") as user_actions_mockfile:
         user_actions = [line.strip().split(",") for line in user_actions_mockfile]
     user_actions.pop(0)  # remove header
+    for row in user_actions:
+        del row[0]
+        row[1] = (datetime.fromtimestamp(float (row[1])/1000))
     try:
         with get_db_connection() as conn:
             cursor = conn.cursor()
-            cursor.executemany('INSERT INTO user_actions (action_id, action_type, action_timestamp, room_id, user_id) VALUES (?, ?, ?, ?, ?)', user_actions)
+            cursor.executemany('INSERT INTO user_actions (action_type, action_timestamp, room_id, user_id) VALUES (?, ?, ?, ?)', user_actions)
             conn.commit()
             print("User actions successfully added to database")
     except sqlite3.Error as e:
@@ -68,10 +71,10 @@ def add_user_actions():
 
 # Update the populate_database function
 def populate_database():
-    add_users()
-    add_songs()
-    add_rooms()
-    add_queues()
+    # add_users()
+    # add_songs()
+    # add_rooms()
+    # add_queues()
     add_user_actions()
 
 if __name__ == "__main__":
