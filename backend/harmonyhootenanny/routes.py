@@ -290,8 +290,8 @@ def searchbar():
     {
         "searchvalue": "string",
         "userData": {
-            "roomId": "int",
-            "userId": "int"
+            "room_Id": "int",
+            "user_Id": "int"
         }
     }
 
@@ -355,8 +355,8 @@ def handle_selected_song():
     {
         "selectedSong": "string",
         "userData": {
-            "roomId": "int",
-            "userId": "int"
+            "room_Id": "int",
+            "user_Id": "int"
         }
     }
 

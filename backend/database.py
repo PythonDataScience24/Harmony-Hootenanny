@@ -64,7 +64,7 @@ def set_username(username) -> None:
         print(f"SQLite error code: {e.sqlite_errorcode}")
         print(f"SQLite error name: {e.sqlite_errorname}")
 
-def add_song_to_db(title:str, artist:str, duration:int, fileName:str):
+def add_song_to_db(title:str, artist:str, duration:int, filename:str):
     """
     Add a song to the database.
 
@@ -72,7 +72,7 @@ def add_song_to_db(title:str, artist:str, duration:int, fileName:str):
         title (str): Song title.
         artist (str): Song artist.
         duration (int): Song duration in seconds.
-        fileName (str): Song file name.
+        filename (str): Song file name.
 
     Returns:
         None
@@ -83,21 +83,21 @@ def add_song_to_db(title:str, artist:str, duration:int, fileName:str):
     try:
         with get_db_connection() as conn:
             conn.cursor().execute("INSERT INTO songs (title, artist, duration, src) VALUES (?, ?, ?, ?)",\
-                           (title, artist, duration, fileName))
+                           (title, artist, duration, filename))
             conn.commit()
             # print("Song successfully added to database")
     except sqlite3.Error as e:
         print(f"SQLite error code: {e.sqlite_errorcode}")
         print(f"SQLite error name: {e.sqlite_errorname}")
 
-def add_song_to_db_queue(songId:int, roomId:int, userId:int):
+def add_song_to_db_queue(song_Id:int, room_Id:int, user_Id:int):
     """
     Add a song to the queue.
 
     Args:
-        songId (int): Song ID.
-        roomId (int): Room ID.
-        userId (int): User ID.
+        song_Id (int): Song ID.
+        room_Id (int): Room ID.
+        user_Id (int): User ID.
 
     Returns:
         None
@@ -108,19 +108,19 @@ def add_song_to_db_queue(songId:int, roomId:int, userId:int):
     try:
         with get_db_connection() as conn:
             conn.cursor().execute("INSERT INTO queues (song_id, room_id, user_id) VALUES (?, ?, ?)",\
-                           (songId, roomId, userId))
+                           (song_Id, room_Id, user_Id))
             conn.commit()
             # print("Song successfully added to queue")
     except sqlite3.Error as e:
         print(f"SQLite error code: {e.sqlite_errorcode}")
         print(f"SQLite error name: {e.sqlite_errorname}")
 
-def remove_song_from_queue(queueIndex:int):
+def remove_song_from_queue(queue_index:int):
     """
     Remove a song from the queue.
 
     Args:
-        queueIndex (int): Queue index of the song.
+        queue_index (int): Queue index of the song.
 
     Returns:
         None
@@ -130,19 +130,19 @@ def remove_song_from_queue(queueIndex:int):
     """
     try:
         with get_db_connection() as conn:
-            conn.cursor().execute(f"DELETE FROM queues WHERE queue_index = ?",(queueIndex,))
+            conn.cursor().execute(f"DELETE FROM queues WHERE queue_index = ?",(queue_index,))
             conn.commit()
             # print("Song successfully removed from queue")
     except sqlite3.Error as e:
         print(f"SQLite error code: {e.sqlite_errorcode}")
         print(f"SQLite error name: {e.sqlite_errorname}")
 
-def get_queue(roomId:int):
+def get_queue(room_Id:int):
     """
     Get the song queue for a room.
 
     Args:
-        roomId (int): Room ID.
+        room_Id (int): Room ID.
 
     Returns:
         list of dict: List of songs with title, artist, and duration.
@@ -152,7 +152,7 @@ def get_queue(roomId:int):
     """
     try:
         with get_db_connection() as conn:
-            cursor = conn.cursor().execute("SELECT title, artist, duration FROM queues LEFT JOIN songs USING(song_id) WHERE room_id = ?",(roomId,))
+            cursor = conn.cursor().execute("SELECT title, artist, duration FROM queues LEFT JOIN songs USING(song_id) WHERE room_id = ?",(room_Id,))
             rows = cursor.fetchall()
             # Convert the results into the desired format
             song_queue = [
@@ -165,12 +165,12 @@ def get_queue(roomId:int):
         print(f"SQLite error code: {e.sqlite_errorcode}")
         print(f"SQLite error name: {e.sqlite_errorname}")
 
-def get_current_song(roomId:int) -> dict:
+def get_current_song(room_Id:int) -> dict:
     """
     Get the currently playing song in a room.
 
     Args:
-        roomId (int): Room ID.
+        room_Id (int): Room ID.
 
     Returns:
         dict: Currently playing song details including title, artist, filename, progress, and queue index.
@@ -191,7 +191,7 @@ def get_current_song(roomId:int) -> dict:
                                     INNER JOIN songs AS s ON q.song_id = s.song_id \
                                     INNER JOIN users AS u ON q.user_id = u.user_id \
                                     WHERE r.room_id = ?;'
-                                  , (roomId,))
+                                  , (room_Id,))
             current_data = result.fetchone()
             currently_playing: dict = {
                 "title":current_data[1], 
@@ -205,12 +205,12 @@ def get_current_song(roomId:int) -> dict:
         print(f"SQLite error code: {e.sqlite_errorcode}")
         print(f"SQLite error name: {e.sqlite_errorname}")
 
-def get_song_by_id(songId:int):
+def get_song_by_id(song_Id:int):
     """
     Get a song by ID.
 
     Args:
-        songId (int): Song ID.
+        song_Id (int): Song ID.
 
     Returns:
         dict: Song details including title, artist, source, and duration.
@@ -220,7 +220,7 @@ def get_song_by_id(songId:int):
     """
     try:
         with get_db_connection() as conn:
-            cursor = conn.cursor().execute("SELECT title, artist, src, duration FROM songs WHERE song_id = ?",(songId,))
+            cursor = conn.cursor().execute("SELECT title, artist, src, duration FROM songs WHERE song_id = ?",(song_Id,))
             row = cursor.fetchone()
             if row:
                 # Convert the results into the desired format
@@ -236,12 +236,13 @@ def get_song_by_id(songId:int):
                 return print("SongID not found in database")
     except sqlite3.Error as e:
         print(f"SQLite error code: {e.sqlite_errorcode}")
+
 def get_song_id_by_name(song_name:str):
     """
-    Get a song by ID.
+    Get a song ID by song Title.
 
     Args:
-        songId (int): Song ID.
+        song_name (str): Song Title.
 
     Returns:
         dict: Song details including title, artist, source, and duration.
@@ -251,7 +252,10 @@ def get_song_id_by_name(song_name:str):
     """
     try:
         with get_db_connection() as conn:
-            cursor = conn.cursor().execute(f"select song_id from songs where title like '%{song_name}%'")
+            cursor = conn.cursor()
+            # Add wildcards around the song_name for LIKE query
+            song_name_with_wildcards = f"%{song_name}%"
+            cursor.execute("SELECT song_id FROM songs WHERE title LIKE ?", (song_name_with_wildcards,))
             row = cursor.fetchone()
             if row:
                 return row[0]
