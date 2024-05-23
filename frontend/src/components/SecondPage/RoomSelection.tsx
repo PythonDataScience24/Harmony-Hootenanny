@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import { Box, Button, Typography } from "@mui/material";
-import {MainPage1, MainPage2, MainPage3} from '../MainPage/MainPage';
+import { MainPage1, MainPage2, MainPage3 } from "../MainPage/MainPage";
 import { MusicNote } from "@mui/icons-material";
 import { useAuth } from "../contexts/AuthContext";
 import Cookies from "js-cookie";
@@ -27,7 +27,7 @@ const RoomSelection: React.FC = () => {
 
   const handleRoomClick = (roomPath: string) => {
     if (isLoggedIn) {
-      navigate("/main");
+      navigate(roomPath);
     } else {
       navigate("/login");
     }
@@ -70,17 +70,34 @@ const RoomSelection: React.FC = () => {
         borderColor="divider"
         width="60%"
       >
-       <Button variant="contained" component={Link} to="/main/room1" style={{fontSize: '20px', height: '60px', width: '100%'}}>Room 1</Button>
-       <Button variant="contained" component={Link} to="/main/room2" style={{fontSize: '20px', height: '60px', width: '100%'}}>Room 2</Button>
-       <Button variant="contained" component={Link} to="/main/room3" style={{fontSize: '20px', height: '60px', width: '100%'}}>Room 3</Button>
-
+        <Button
+          variant="contained"
+          onClick={() => handleRoomClick("/main/room1")}
+          style={{ fontSize: "20px", height: "60px", width: "100%" }}
+        >
+          Room 1
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => handleRoomClick("/main/room2")}
+          style={{ fontSize: "20px", height: "60px", width: "100%" }}
+        >
+          Room 2
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => handleRoomClick("/main/room3")}
+          style={{ fontSize: "20px", height: "60px", width: "100%" }}
+        >
+          Room 3
+        </Button>
       </Box>
 
-      <Routes>
+      {/* <Routes>
         <Route path="/main/room1" element={<MainPage1 />} />
         <Route path="/main/room2" element={<MainPage2 />} />
         <Route path="/main/room3" element={<MainPage3 />} />
-      </Routes>
+      </Routes> */}
     </Box>
   );
 };
