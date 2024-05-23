@@ -82,11 +82,11 @@ const DashBoard = () => {
           </Paper>
           <Paper elevation={paperElevation} sx={paperStyling}>
             Top Queuers: <br />
-            <img src="https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Glossary.svg" alt="" width={"100%"} />
+            <img src="/topQueuers.png" alt="" width={"100%"} />
           </Paper>
           <Paper elevation={paperElevation} sx={paperStyling}>
             Top Skippers: <br />
-            <img src="https://ralfvanveen.com/wp-content/uploads/2021/06/Placeholder-_-Glossary.svg" alt="" width={"100%"} />
+            <img src="/topSkippers.png" alt="" width={"100%"} />
           </Paper>
         </Box>
 
