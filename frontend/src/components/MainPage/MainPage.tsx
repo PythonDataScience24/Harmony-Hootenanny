@@ -5,6 +5,7 @@ import MainWindow from './MainWindow'
 import SongQueue from './SongQueue'
 import Cookies from 'js-cookie'
 import socket from '../../socket'
+import DashBoard from '../DashBoard'
 
 interface MainPageProps {
   roomId: number;
@@ -119,34 +120,37 @@ const MainPage: React.FC<MainPageProps> = ({ roomId }) => {
           justifyContent: "space-around"
         }}
       >
-        <Box sx={{ flexGrow: 1 }}>
+        <Box>
           <Rooms></Rooms>
         </Box>
         <Divider orientation="vertical" />
-        <Box sx={{ flexGrow: 7, height: "100%" }}>      
-        {//@ts-ignore
-          <MainWindow 
-          currentlyPlaying={filename} 
-          activeUsers={activeUsers} 
-          skip={skip} p
-          lay={play} 
-          pause={pause} 
-          onSongSelect={select_song}
-          onSongDownload={download_song}
-          //@ts-ignore
-          song={song} 
-          >
+        <Box sx={{ flexGrow: 7, height: "100%" }}>
+          {//@ts-ignore
+            roomId > 0 ? <MainWindow 
+            currentlyPlaying={filename} 
+            activeUsers={activeUsers} 
+            skip={skip} p
+            lay={play} 
+            pause={pause} 
+            onSongSelect={select_song}
+            onSongDownload={download_song}
+            //@ts-ignore
+            song={song} 
+            >  
+            </MainWindow> :
+              <DashBoard />
+          }
+        </Box>
 
-          </MainWindow>
+        {roomId > 0 ? <>
+          <Divider orientation="vertical" />
+          <Box sx={{ flexGrow: 1 }}>
+            {
+              // @ts-ignore
+              <SongQueue queue={queue}></SongQueue>}
+          </Box>
+        </> : <></>
         }
-        </Box>
-
-        <Divider orientation="vertical" />
-        <Box sx={{ flexGrow: 1 }}>
-          {
-            // @ts-ignore
-            <SongQueue queue={queue}></SongQueue>}
-        </Box>
       </Box >
     </>
   )
@@ -160,4 +164,7 @@ export function MainPage2() {
 }
 export function MainPage3() {
   return <MainPage roomId={3} />;
+}
+export function Dashboard() {
+  return <MainPage roomId={0} />;
 }
