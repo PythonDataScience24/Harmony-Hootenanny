@@ -2,43 +2,28 @@ import { Box, Button, Divider, Paper } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Rooms from "./MainPage/Rooms";
 
+interface ArtistData {
+  artist: string;
+  count: number;
+}
+
 interface RoomData {
-  number_of_listeners: number;
-  total_play_time: number;
-  most_played_song: string;
-  top_artist: string;
+  top_artist: ArtistData[];
 }
 
 const DashBoard = () => {
   const [data, setData] = useState<Record<string, RoomData> | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/dashboard", {
-      headers: {
-        Accept: "application/json",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const contentType = response.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-          throw new TypeError("Oops, we haven't got JSON!");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Data from server:", data);
-        setData(data);
-      })
-      .catch((error) => console.error("Error:", error.message));
+    fetch("http://localhost:5000/api/dashboard")
+      .then((response) => response.json())
+      .then((data) => setData(data));
   }, []);
-  /*
+
   if (!data) {
     return <div>Loading...</div>;
   }
-*/
+ 
   const rowStyling = {
     width: "100%",
     padding: "20px",
@@ -52,6 +37,10 @@ const DashBoard = () => {
   const paperStyling = {
     padding: "20px",
     width: "30%"
+  }
+  const topArtistPaperStyling = {
+    padding: "20px",
+    width: "25%"
   }
   const paperElevation = 1;
   return (
@@ -68,18 +57,25 @@ const DashBoard = () => {
           overflow: "auto"
         }}
       >
-        General Data
+        <h2 style={{ fontWeight: 'bold', fontSize: '1.5em' }}>General Data</h2>
         <Box sx={rowStyling}>
-          {/*<Paper elevation={paperElevation} sx={{ ...paperStyling, height: "100%" }}>
-            <h3>
-              Top Artists:
-            </h3>
-            <ol>
-              <li><h4>Artist number 1</h4></li>
-              <li><h4>Numba 2</h4></li>
-              <li><h4>3</h4></li>
-            </ol>
-      </Paper>*/}
+        <Box sx={rowStyling}>
+        {Object.entries(data).map(([room, roomData]) => (
+          <Paper key={room} sx={topArtistPaperStyling}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%' }}>
+              <h3 style={{ alignSelf: 'center' }}>{room}</h3>
+              <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', width: '100%' }}>
+              <h4 style={{ position: 'relative', top: '-10px' }}>Top Artists:</h4>
+              <ol style={{ alignSelf: 'center', textAlign: 'left' }}>
+              {roomData.top_artist.map((artistData, index) => (
+                <li key={index}>{artistData.artist}</li>
+          ))}
+        </ol>
+      </Box>
+    </Box>
+  </Paper>
+))}
+      </Box>
           <Paper elevation={paperElevation} sx={paperStyling}>
             Top Queuers: <br />
             <img src="/topQueuers.png" alt="" width={"100%"} />
@@ -92,7 +88,7 @@ const DashBoard = () => {
 
 
 
-        Most Played Songs
+        <h2 style={{ fontWeight: 'bold', fontSize: '1.5em' }}>Most Played Songs</h2>
         <Box sx={rowStyling}>
           <Paper elevation={paperElevation} sx={paperStyling}>
             Room 1: <br />
@@ -107,7 +103,7 @@ const DashBoard = () => {
             <img src="/topSongs3.png" alt="" width={"100%"} />
           </Paper>
         </Box>
-        Room Stats
+        <h2 style={{ fontWeight: 'bold', fontSize: '1.5em' }}>Room Stats</h2>
         <Box sx={rowStyling}>
           <Paper elevation={paperElevation} sx={paperStyling}>
             Number of listeners: <br />

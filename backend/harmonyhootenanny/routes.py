@@ -436,3 +436,37 @@ def create_rooms():
 
 # Call the function when the application starts
 create_rooms()
+
+@main.route('/api/dashboard', methods=['GET'])
+def get_dashboard():
+    """
+    - top artist
+    """
+    try:
+        def get_stats(cursor, query, room_id):
+            cursor.execute(query, (room_id,))
+            rows = cursor.fetchall()
+            return [{description[0]: value for description, value in zip(cursor.description, row)} for row in rows]
+
+    
+        with get_db_connection() as db:
+            cursor = db.cursor()
+            room_data = {}
+            for room_id in [1, 2, 3]:
+                 room_data[f'room{room_id}'] ={
+    
+                    'top_artist': get_stats(cursor, """
+                               SELECT artist, COUNT(*) as count
+                                FROM songs JOIN queues on songs.song_id = queues.song_id
+                                WHERE queues.room_id=?
+                                GROUP BY artist
+                                ORDER BY count DESC
+                                Limit 3
+                                """, room_id),
+                     
+                }
+
+        return jsonify(room_data), 200
+        
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
