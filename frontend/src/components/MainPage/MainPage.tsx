@@ -129,8 +129,8 @@ const MainPage: React.FC<MainPageProps> = ({ roomId }) => {
             roomId > 0 ? <MainWindow 
             currentlyPlaying={filename} 
             activeUsers={activeUsers} 
-            skip={skip} p
-            lay={play} 
+            skip={skip} 
+            play={play} 
             pause={pause} 
             onSongSelect={select_song}
             onSongDownload={download_song}
