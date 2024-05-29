@@ -1,6 +1,6 @@
 import { Box, Button, Divider, Link } from "@mui/material";
 import {MainPage1, MainPage2, MainPage3, Dashboard} from "./components/MainPage/MainPage";
-import RoomSelection from "./components/SecondPage/RoomSelection";
+import RoomSelection from "./components/RoomSelectionPage/RoomSelection";
 import { Route, Routes } from "react-router-dom";
 import { StrictMode, useMemo } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";

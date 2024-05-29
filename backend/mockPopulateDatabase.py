@@ -7,6 +7,13 @@ from database import add_song_to_db_queue, init_db, add_song_to_db, get_db_conne
 
 # Add sample users to the database
 def add_users():
+    """
+    Add sample users to the database from mockData/users.csv file.
+
+    This function reads the users.csv file, which contains user data in the format:
+    user_id, username, password_hash. It then inserts this data into the users table in the database.
+    
+    """
     with open("./mockData/users.csv", "r") as users_mockfile:
         users = [line.strip().split(",") for line in users_mockfile]
     users.pop(0)
@@ -21,6 +28,13 @@ def add_users():
 
 # Add sample songs to the database
 def add_songs():
+    """
+    Add sample songs to the database from mockData/songs.csv file.
+
+    This function reads the songs.csv file, which contains song data in the format:
+    song_id, src, title, artist, duration. It then inserts this data into the songs table in the database.
+
+    """
     with open("./mockData/songs.csv", "r") as songs_mockfile:
         songs = [line.strip().split(",") for line in songs_mockfile]
     songs.pop(0)
@@ -29,6 +43,13 @@ def add_songs():
 
 # Add sample rooms to the database
 def add_rooms():
+    """
+    Add 3 sample rooms to the database
+
+    This function adds 3 sample rooms to the rooms table in the database. The rooms are initialized with the following data:
+    room_id, number_of_listeners, session_start_time, session_end_time, session_duration, song_start_time, queue_index.
+
+    """
     now = int(time.time())
     rooms = [
         (1, 10, now, now + 60*60*100, 3600, now, 1),
@@ -46,6 +67,13 @@ def add_rooms():
 
 # Add sample queue entries to the database
 def add_queues():
+    """
+    Add sample queue entries to the database from mockData/queues.csv file.
+
+    This function reads the queues.csv file, which contains queue data in the format:
+    queue_index, song_id, room_id, user_id. It then inserts this data into the queues table in the database.
+
+    """
     with open("./mockData/queues.csv", "r") as queue_mockfile:
         queues = [line.strip().split(",") for line in queue_mockfile]
     queues.pop(0)
@@ -54,6 +82,13 @@ def add_queues():
 
 # Add sample user actions to the database
 def add_user_actions():
+    """
+    Add sample user actions to the database from mockData/userActions.csv file.
+
+    This function reads the userActions.csv file, which contains user action data in the format:
+    action_id, action_type, action_timestamp, room_id, user_id. It then inserts this data into the user_actions table in the database.
+    
+    """
     with open("./mockData/userActions.csv", "r") as user_actions_mockfile:
         user_actions = [line.strip().split(",") for line in user_actions_mockfile]
     user_actions.pop(0)  # remove header

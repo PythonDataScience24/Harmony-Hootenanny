@@ -418,9 +418,13 @@ def handle_selected_song():
     else:
         return jsonify({'error': 'Invalid input'}), 400
 
-
+#  Creates three rooms in the database if they don't exist already.
 def create_rooms():
-    """Create predefined rooms in the database if they don't exist."""
+    """
+    Create predefined rooms in the database if they don't exist.
+    This function connects to the database, checks if the rooms with ids 1, 2, and 3 exist,
+    and if they don't, it creates them. This function is called when the application starts.
+    """
     room_ids = [1, 2, 3]
 
     with get_db_connection() as conn:
@@ -437,10 +441,13 @@ def create_rooms():
 # Call the function when the application starts
 create_rooms()
 
+# Endpoint to get the dashboard data
 @main.route('/api/dashboard', methods=['GET'])
 def get_dashboard():
     """
-    - top artist
+    - This functions connects to the database and retrieves the top 3 artists for each room.
+    - It returns the data in JSON format.
+    
     """
     try:
         def get_stats(cursor, query, room_id):

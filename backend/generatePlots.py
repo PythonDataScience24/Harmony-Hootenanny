@@ -3,14 +3,42 @@ from matplotlib import pyplot as plt
 from database import get_db_connection
 
 """
-DO NOT JUDGE THIS FILE, IT HAS BEEN MADE IN 15 MINUTES, I KNOW THERE'S A LOT WRONG
+This module is responsible for generating plots based on data from the database.
+It connects to the database, retrieves the necessary data, and uses matplotlib to generate the plots.
+The plots are saved in the frontend/public folder as .png files. These plots are then displayed in the dashboard.
+
+Note: This file was created under a tight deadline and as such, may contain areas that could be improved.
 """
 
 def get_stats(cursor, query, room_id):
+    """
+    Execute a query that requires a room_id parameter and return the results.
+
+    Args:
+        cursor (sqlite3.Cursor): The cursor to execute the query.
+        query (str): The SQL query to execute.
+        room_id (int): The room_id parameter for the query.
+
+    Returns:
+        list[dict]: A list of dictionaries.
+
+    """
     cursor.execute(query, (room_id,))
     rows = cursor.fetchall()
     return [{description[0]: value for description, value in zip(cursor.description, row)} for row in rows]
+
 def get_stats2(cursor, query):
+    """
+    Execute a query that does not require any parameters and return the results.
+
+    Args:
+        cursor (sqlite3.Cursor): The cursor to execute the query.
+        query (str): The SQL query to execute.
+
+    Returns:
+        list[dict]: A list of dictionaries.
+
+    """
     cursor.execute(query,)
     rows = cursor.fetchall()
     return [{description[0]: value for description, value in zip(cursor.description, row)} for row in rows]
