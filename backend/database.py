@@ -64,6 +64,25 @@ def set_username(username) -> None:
         print(f"SQLite error code: {e.sqlite_errorcode}")
         print(f"SQLite error name: {e.sqlite_errorname}")
 
+def get_user_id(username):
+    """
+    Retrieves the user ID for the given username from the database.
+
+    Args:
+        username (str): The username to look up.
+
+    Returns:
+        int or None: The user ID if found, otherwise None.
+
+    This function queries the database for the user ID corresponding to the provided username.
+    If a match is found, it returns the user ID; otherwise, it returns None.
+    """
+    with get_db_connection() as db:
+        cursor = db.cursor()
+        cursor.execute("SELECT user_id FROM users WHERE username = ?", (username,))
+        result = cursor.fetchone()
+        return result[0] if result else None
+    
 def add_song_to_db(title:str, artist:str, duration:int, filename:str):
     """
     Add a song to the database.

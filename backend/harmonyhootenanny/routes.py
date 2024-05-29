@@ -6,9 +6,8 @@ import sqlite3
 import re
 from flask import Blueprint, request, jsonify, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
-from harmonyhootenanny.modules.usernameID import get_user_id
 from harmonyhootenanny.events import add_to_scheduler_queue, get_or_create_scheduler
-from database import add_song_to_db_queue, get_db_connection
+from database import add_song_to_db_queue, get_db_connection, get_user_id
 from harmonyhootenanny.modules.youtubedownloader import YoutubeDownloader
 
 
